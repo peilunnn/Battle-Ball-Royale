@@ -5,7 +5,7 @@ using Mirror;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    float speed = 10.0f;
+    float moveSpeed = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -19,16 +19,10 @@ public class PlayerMovement : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (Input.GetKeyDown(KeyCode.W))
-            transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        float xPos = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x + xPos, transform.position.y, transform.position.z), moveSpeed);
 
-        if (Input.GetKeyDown(KeyCode.A))
-            transform.Translate(Vector3.left * Time.deltaTime * speed);
-
-        if (Input.GetKeyDown(KeyCode.S))
-            transform.Translate(Vector3.back * Time.deltaTime * speed);
-
-        if (Input.GetKeyDown(KeyCode.D))
-            transform.Translate(Vector3.right * Time.deltaTime * speed);
+        float zPos = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y, transform.position.z + zPos), moveSpeed);
     }
 }

@@ -31,9 +31,12 @@ public class PickUpThrow : NetworkBehaviour
     [ClientRpc]
     void RpcUpdatePickUp()
     {
+        Debug.Log("in rpc");
         Ray ray = new Ray(this.transform.position, this.transform.forward);
+        Debug.Log(ray);
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
+            Debug.Log("hit other player");
             // RAYCAST HIT THE OTHER PLAYER, SET BOTH PLAYERS' STATES
             isPicker = true;
             GameObject otherPlayer = hit.collider.gameObject;
@@ -44,6 +47,7 @@ public class PickUpThrow : NetworkBehaviour
             // SUSPEND OTHER PLAYER
             Rigidbody otherPlayerRb = otherPlayer.GetComponent<Rigidbody>();
             otherPlayerRb.useGravity = false;
+            otherPlayerRb.isKinematic = true;
             otherPlayer.transform.position = destPos.position;
             otherPlayer.transform.parent = destPos.transform;
         }

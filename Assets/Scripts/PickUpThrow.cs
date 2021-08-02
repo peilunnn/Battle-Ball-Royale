@@ -1,12 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
 public class PickUpThrow : NetworkBehaviour
 {
-    public bool isPicker = false;
-    public bool isPickedUp = false;
+    [SerializeField] bool isPicker = false;
+    [SerializeField] bool isPickedUp = false;
     Transform destPos;
 
     // Start is called before the first frame update
@@ -19,18 +19,25 @@ public class PickUpThrow : NetworkBehaviour
     void Update()
     {
         if (isLocalPlayer && !isPickedUp && Input.GetKeyDown(KeyCode.E))
-            PickUp();
+            CmdSendPickUp();
     }
 
-    void PickUp()
+    [Command]
+    void CmdSendPickUp()
+    {
+        RpcUpdatePickUp();
+    }
+
+    [ClientRpc]
+    void RpcUpdatePickUp()
     {
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
             // RAYCAST HIT THE OTHER PLAYER, SET BOTH PLAYERS' STATES
             isPicker = true;
-            GameObject otherPlayer = hit.transform.gameObject;
-            PickUpThrow otherPlayerScript = otherPlayer.GetComponent<PickUpThrow>();  
+            GameObject otherPlayer = hit.collider.gameObject;
+            PickUpThrow otherPlayerScript = otherPlayer.GetComponent<PickUpThrow>();
             otherPlayerScript.isPickedUp = true;
             otherPlayerScript.isPicker = false;
 

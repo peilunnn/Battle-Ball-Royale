@@ -9,6 +9,8 @@ public class PickUpThrow : NetworkBehaviour
     [SerializeField] bool isPicker = false;
     [SerializeField] bool isPickedUp = false;
     [SerializeField] bool activatedOtherPlayerRagdoll = false;
+    [SerializeField] bool isLetGo = false;
+
 
     Transform destPos;
     public GameObject otherPlayer;
@@ -76,6 +78,7 @@ public class PickUpThrow : NetworkBehaviour
             otherPlayer = hit.collider.gameObject;
             otherPlayerScript = otherPlayer.GetComponent<PickUpThrow>();
             otherPlayerScript.isPickedUp = true;
+            otherPlayerScript.isLetGo = false;
         }
     }
 
@@ -159,9 +162,9 @@ public class PickUpThrow : NetworkBehaviour
     void SetPutDownOrThrowStates()
     {
         isPicker = false;
-        otherPlayer.transform.parent = null;
         activatedOtherPlayerRagdoll = false;
         otherPlayerScript.isPickedUp = false;
+        otherPlayerScript.isLetGo = true;
         otherPlayer.transform.parent = null;
         otherPlayerRb.useGravity = true;
     }

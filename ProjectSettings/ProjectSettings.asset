@@ -657,10 +657,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 0a323dd9-46b1-489e-bb2f-a7fbc58eac62
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: DodgeballGame (2)
+  organizationId: peilunnn
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

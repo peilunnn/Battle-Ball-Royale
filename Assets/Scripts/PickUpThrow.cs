@@ -2,16 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEditor;
 
 public class PickUpThrow : NetworkBehaviour
 {
     [SerializeField] bool isPicker = false;
     [SerializeField] bool isPickedUp = false;
+    [SerializeField] bool activatedOtherPlayerRagdoll = false;
+
     Transform destPos;
-    GameObject otherPlayer;
+    public GameObject otherPlayer;
+    PickUpThrow otherPlayerScript;
     Rigidbody otherPlayerRb;
+
+
     float throwForce = 1000;
 
+    void Awake()
+    {
+        Physics.IgnoreLayerCollision(9, 8, true);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,58 +35,113 @@ public class PickUpThrow : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        // IF PLAYER PRESSES E, PICK UP THE OTHER PLAYER
-        if (!isPickedUp && Input.GetKeyDown(KeyCode.E))
-            CmdPickUp();
+        // IF PLAYER PRESSES E, SET STATES AND PICK UP THE OTHER PLAYER
+        if (!isPicker && !isPickedUp && Input.GetKeyDown(KeyCode.E))
+            CmdSetPickUpStates();
+        if (isPicker && otherPlayerScript.isPickedUp && activatedOtherPlayerRagdoll)
+        {
+            CmdDrawLine();
+            CmdActivateOtherPlayerRagdoll();
+        }
 
         // IF PLAYER PRESSES E AGAIN, PUT THE OTHER PLAYER DOWN
-        if (isPicker && Input.GetKeyDown(KeyCode.E))
-            CmdPutDown();
-
-        // IF PLAYER LEFT CLICKS, THROW THE OTHER PLAYER
-        if (isPicker && Input.GetKeyDown(KeyCode.Mouse0))
+        // OTHERWISE IF PLAYER LEFT CLICKS, THROW THE OTHER PLAYER
+        if (isPicker && otherPlayerScript.isPickedUp)
         {
-            Debug.Log("throwing");
-            CmdThrow();
+            if (Input.GetKeyDown(KeyCode.E))
+                CmdPutDown();
+            else if (Input.GetKeyDown(KeyCode.Mouse0))
+                CmdThrow();
         }
     }
 
     [Command]
-    void CmdPickUp()
+    void CmdSetPickUpStates()
     {
-        RpcUpdatePickUp();
+        RpcPickUpStates();
     }
 
     [ClientRpc]
-    void RpcUpdatePickUp()
+    void RpcPickUpStates()
     {
         Ray ray = new Ray(this.transform.position, this.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 500f))
         {
+            if (hit.collider.tag != "Player")
+                return;
+
             // RAYCAST HIT THE OTHER PLAYER, SET BOTH PLAYERS' STATES
             isPicker = true;
+            activatedOtherPlayerRagdoll = true;
             otherPlayer = hit.collider.gameObject;
-            PickUpThrow otherPlayerScript = otherPlayer.GetComponent<PickUpThrow>();
+            otherPlayerScript = otherPlayer.GetComponent<PickUpThrow>();
             otherPlayerScript.isPickedUp = true;
-
-            // SUSPEND OTHER PLAYER
-            otherPlayerRb = otherPlayer.GetComponent<Rigidbody>();
-            otherPlayerRb.useGravity = false;
-            otherPlayerRb.isKinematic = true;
-            otherPlayer.transform.position = destPos.position;
-            otherPlayer.transform.parent = destPos.transform;
         }
     }
+
+    [Command]
+    void CmdActivateOtherPlayerRagdoll()
+    {
+        RpcActivateOtherPlayerRagdoll();
+    }
+
+    [ClientRpc]
+    void RpcActivateOtherPlayerRagdoll()
+    {
+        otherPlayer.transform.position = destPos.position;
+        otherPlayer.transform.parent = destPos.transform;
+        otherPlayer.GetComponent<Animator>().enabled = false;
+        GameObject[] otherPlayerRagdollObjects = GameObject.FindGameObjectsWithTag("Ragdoll");
+        foreach (GameObject ragdollObj in otherPlayerRagdollObjects)
+        {
+            Rigidbody ragdollRb = ragdollObj.GetComponent<Rigidbody>();
+            ragdollRb.useGravity = false;
+        }
+        otherPlayerRb = otherPlayer.GetComponent<Rigidbody>();
+        otherPlayerRb.useGravity = false;
+    }
+
+    [Command]
+    void CmdDrawLine()
+    {
+        RpcDrawLine();
+    }
+
+    [ClientRpc]
+    void RpcDrawLine()
+    {
+        Debug.DrawRay(transform.position, otherPlayer.transform.position, Color.green);
+        // Debug.Log(transform.position);
+        // Debug.Log(otherPlayer.transform.position);
+        // Handles.DrawBezier(new Vector3(-0.0f, 0.0f, 0.0f), new Vector3(-2.0f, 2.0f, 0.0f), Vector3.zero, Vector3.zero, Color.red, null, 2f);
+        // Handles.DrawBezier(transform.position, Vector3.zero, Vector3.zero, Vector3.zero, Color.red, null, 2f);
+    }
+
+    void DeactivateOtherPlayerRagdoll()
+    {
+        otherPlayer.transform.parent = null;
+        GameObject[] otherPlayerRagdollObjects = GameObject.FindGameObjectsWithTag("Ragdoll");
+        foreach (GameObject ragdollObj in otherPlayerRagdollObjects)
+        {
+            Rigidbody ragdollRb = ragdollObj.GetComponent<Rigidbody>();
+            ragdollRb.useGravity = true;
+        }
+        otherPlayerRb = otherPlayer.GetComponent<Rigidbody>();
+        otherPlayerRb.useGravity = true;
+    }
+
 
     [Command]
     void CmdPutDown()
     {
-        RpcUpdatePutDown();
+        RpcPutDown();
     }
 
     [ClientRpc]
-    void RpcUpdatePutDown()
+    void RpcPutDown()
     {
+        SetPutDownOrThrowStates();
+        DeactivateOtherPlayerRagdoll();
         isPicker = false;
         otherPlayerRb.useGravity = true;
         otherPlayerRb.isKinematic = false;
@@ -86,13 +151,21 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdThrow()
     {
-        RpcUpdateThrow();
+        RpcThrow();
     }
 
     [ClientRpc]
-    void RpcUpdateThrow()
+    void RpcThrow()
+    {
+        SetPutDownOrThrowStates();
+        DeactivateOtherPlayerRagdoll();
+        otherPlayerRb.AddForce(this.transform.forward * throwForce);
+    }
+    void SetPutDownOrThrowStates()
     {
         isPicker = false;
+        activatedOtherPlayerRagdoll = false;
+        otherPlayerScript.isPickedUp = false;
         otherPlayerRb.useGravity = true;
         otherPlayerRb.isKinematic = false;
         otherPlayerRb.AddForce(this.transform.forward * throwForce);

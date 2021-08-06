@@ -168,4 +168,6 @@ public class PickUpThrow : NetworkBehaviour
         otherPlayer.transform.parent = null;
         otherPlayerRb.useGravity = true;
     }
+
+
 }

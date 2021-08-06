@@ -1026,7 +1026,7 @@ GameObject:
   - component: {fileID: 43658882483003449}
   - component: {fileID: 6126859289657306426}
   m_Layer: 8
-  m_Name: PlayerRagdoll
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

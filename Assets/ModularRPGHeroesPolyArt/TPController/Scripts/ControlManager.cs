@@ -48,10 +48,6 @@ namespace DM
 
         void Start() // Initiallizing camera, animator, rigidboy
         {
-            // if (!isLocalPlayer)
-            //     return;
-            // camManager = CameraManager.singleton;
-            // camManager.Init(this.transform);
             SetupAnimator();
             rigid = GetComponent<Rigidbody>();
 
@@ -137,9 +133,7 @@ namespace DM
             // }
 
             if (roll && onGround)    //I clicked for roll. middle mouse button or Y key in the joypad.
-            {
-                anim.SetTrigger("roll");    //Set trigger named "roll" on
-            }
+                GetComponent<NetworkAnimator>().SetTrigger("roll");
 
             float targetSpeed = moveSpeed;  //set run speed as target speed.
 

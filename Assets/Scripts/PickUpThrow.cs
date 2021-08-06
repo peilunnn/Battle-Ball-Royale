@@ -119,7 +119,6 @@ public class PickUpThrow : NetworkBehaviour
 
     void DeactivateOtherPlayerRagdoll()
     {
-        otherPlayer.transform.parent = null;
         GameObject[] otherPlayerRagdollObjects = GameObject.FindGameObjectsWithTag("Ragdoll");
         foreach (GameObject ragdollObj in otherPlayerRagdollObjects)
         {
@@ -142,10 +141,6 @@ public class PickUpThrow : NetworkBehaviour
     {
         SetPutDownOrThrowStates();
         DeactivateOtherPlayerRagdoll();
-        isPicker = false;
-        otherPlayerRb.useGravity = true;
-        otherPlayerRb.isKinematic = false;
-        otherPlayer.transform.parent = destPos.transform;
     }
 
     [Command]
@@ -164,10 +159,10 @@ public class PickUpThrow : NetworkBehaviour
     void SetPutDownOrThrowStates()
     {
         isPicker = false;
+        otherPlayer.transform.parent = null;
         activatedOtherPlayerRagdoll = false;
         otherPlayerScript.isPickedUp = false;
+        otherPlayer.transform.parent = null;
         otherPlayerRb.useGravity = true;
-        otherPlayerRb.isKinematic = false;
-        otherPlayerRb.AddForce(this.transform.forward * throwForce);
     }
 }

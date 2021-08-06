@@ -19,7 +19,7 @@ namespace DM
             control = GetComponentInParent<ControlManager>();
         }
 
-        
+
         private void OnAnimatorMove()   //It updates every frame when animator's animations in play.
         {
             if (control.canMove)
@@ -32,17 +32,17 @@ namespace DM
             float multiplier = 3f;
 
             dPosition = anim.deltaPosition;   //storing delta positin of active model's position.         
-            
+
             dPosition.y = 0f;   //flatten the Y (height) value of root animations.
-            
+
             vPosition = (dPosition * multiplier) / Time.fixedDeltaTime;     //defines the vector 3 value for the velocity.      
 
-            
+
             control.rigid.velocity = vPosition; //This will move the root gameObject for matching active model's position.
-            
+
 
         }
 
-        
+
     }
 }

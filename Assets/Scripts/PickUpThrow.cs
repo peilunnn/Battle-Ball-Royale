@@ -60,11 +60,11 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdSetPickUpStates()
     {
-        RpcPickUpStates();
+        RpcSetPickUpStates();
     }
 
     [ClientRpc]
-    void RpcPickUpStates()
+    void RpcSetPickUpStates()
     {
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 500f))
@@ -169,5 +169,19 @@ public class PickUpThrow : NetworkBehaviour
         otherPlayerRb.useGravity = true;
     }
 
+    void OnCollisionEnter(Collision other)
+    {
+        if (isLetGo && other.gameObject.tag == "Ground")
+        {
+            GetComponent<ParticleSystem>().Play();
+            StartCoroutine(EnableAnimatorOnCollision());
+        }
+    }
 
+    IEnumerator EnableAnimatorOnCollision()
+    {
+        yield return new WaitForSeconds(2);
+        GetComponent<Animator>().enabled = true;
+        isLetGo = false;
+    }
 }

@@ -16,6 +16,8 @@ public class PickUpThrow : NetworkBehaviour
     public GameObject otherPlayer;
     PickUpThrow otherPlayerScript;
     Rigidbody otherPlayerRb;
+    SphereCollider sphereCollider;
+    Vector3 originalCenter;
 
 
     float throwForce = 1000;
@@ -29,6 +31,8 @@ public class PickUpThrow : NetworkBehaviour
     void Start()
     {
         destPos = transform.Find("Destination");
+        sphereCollider = GetComponent<SphereCollider>();
+        originalCenter = sphereCollider.center;
     }
 
     // Update is called once per frame
@@ -67,7 +71,7 @@ public class PickUpThrow : NetworkBehaviour
     void RpcSetPickUpStates()
     {
         Ray ray = new Ray(this.transform.position, this.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, 500f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {
             if (hit.collider.tag != "Player")
                 return;
@@ -173,6 +177,7 @@ public class PickUpThrow : NetworkBehaviour
     {
         if (isLetGo && other.gameObject.tag == "Ground")
         {
+            sphereCollider.center = new Vector3(-0.03f, 0.90f, -0.03f);
             GetComponent<ParticleSystem>().Play();
             StartCoroutine(EnableAnimatorOnCollision());
         }
@@ -182,6 +187,7 @@ public class PickUpThrow : NetworkBehaviour
     {
         yield return new WaitForSeconds(2);
         GetComponent<Animator>().enabled = true;
+        sphereCollider.center = originalCenter;
         isLetGo = false;
     }
 }

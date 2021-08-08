@@ -18,6 +18,7 @@ public class PickUpThrow : NetworkBehaviour
     [SerializeField] SphereCollider sphereCollider;
     Vector3 originalCenter;
     [SerializeField] Transform destPos;
+    [SerializeField] LineRenderer lineOfFire;
     float throwForce = 1000;
 
     void Awake()
@@ -44,7 +45,7 @@ public class PickUpThrow : NetworkBehaviour
         // IF SUCCESSFUL PICK UP, ACTIVATE TEAMMATE RAGDOLL EVERY FRAME 
         if (toActivateTeammateRagdoll)
         {
-            CmdDrawLineOfFire();
+            DrawLineOfFire();
             CmdActivateTeammateRagdoll();
         }
 
@@ -54,6 +55,7 @@ public class PickUpThrow : NetworkBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
             {
+                RemoveLineOfFire();
                 CmdDeactivateTeammateRagdoll();
                 CmdSetPutDownOrThrowStates();
 
@@ -66,7 +68,6 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdSetPickUpStates()
     {
-        // SEND RAY
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {
@@ -100,19 +101,17 @@ public class PickUpThrow : NetworkBehaviour
         teammate.GetComponent<Rigidbody>().useGravity = false;
     }
 
-    [Command]
-    void CmdDrawLineOfFire()
+
+    void DrawLineOfFire()
     {
-        RpcDrawLineOfFire();
+        lineOfFire.enabled = true;
+        lineOfFire.SetPosition(0, teammate.transform.position + new Vector3(0, 0.5f, 0));
+        lineOfFire.SetPosition(1, transform.forward * 10 + transform.position);
     }
 
-    [ClientRpc]
-    void RpcDrawLineOfFire()
+    void RemoveLineOfFire()
     {
-        if (!teammate)
-            return;
-
-        Debug.DrawRay(transform.position, teammate.transform.position, Color.green);
+        lineOfFire.enabled = false;
     }
 
     [Command]
@@ -158,6 +157,9 @@ public class PickUpThrow : NetworkBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        if (!isLocalPlayer)
+            return;
+
         if (isLetGo && other.gameObject.tag == "Ground")
             CmdOnCollisionWithGround();
     }

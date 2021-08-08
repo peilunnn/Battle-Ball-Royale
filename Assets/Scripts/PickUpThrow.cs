@@ -6,14 +6,14 @@ using UnityEditor;
 
 public class PickUpThrow : NetworkBehaviour
 {
-    [SerializeField] bool isPicker = false;
-    [SerializeField] bool isPickedUp = false;
-    [SerializeField] bool toActivateTeammateRagdoll = false;
-    [SerializeField] bool isLetGo = false;
+    [SyncVar] [SerializeField] bool isPicker = false;
+    [SyncVar] [SerializeField] bool isPickedUp = false;
+    [SyncVar] [SerializeField] bool toActivateTeammateRagdoll = false;
+    [SyncVar] [SerializeField] bool isLetGo = false;
 
 
     Transform destPos;
-    [SerializeField] GameObject teammate;
+    [SyncVar] [SerializeField] GameObject teammate;
     PickUpThrow teammateScript;
     Rigidbody teammateRb;
 
@@ -52,24 +52,22 @@ public class PickUpThrow : NetworkBehaviour
 
         // IF PLAYER RIGHT CLICKS, PUT THE OTHER PLAYER DOWN
         // OTHERWISE IF PLAYER LEFT CLICKS, THROW THE OTHER PLAYER
-        if (isPicker && teammateScript.isPickedUp)
+        if (isPicker)
         {
             if (Input.GetKeyDown(KeyCode.Mouse1))
-                CmdPutDown();
-            else if (Input.GetKeyDown(KeyCode.Mouse0))
-                CmdThrow();
+            {
+                CmdSetPutDownOrThrowStates();
+                CmdDeactivateTeammateRagdoll();
+            }
+            // else if (Input.GetKeyDown(KeyCode.Mouse0))
+            //     CmdThrow();
         }
     }
 
     [Command]
     void CmdSetPickUpStates()
     {
-        RpcSetPickUpStates();
-    }
-
-    [ClientRpc]
-    void RpcSetPickUpStates()
-    {
+        // RpcSetPickUpStates();
         // SEND RAY
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
@@ -113,28 +111,34 @@ public class PickUpThrow : NetworkBehaviour
         teammateRb.useGravity = false;
     }
 
+    // [Command]
+    // void CmdDrawLine()
+    // {
+    //     RpcDrawLine();
+    // }
+
+    // [ClientRpc]
+    // void RpcDrawLine()
+    // {
+    //     if (!teammate)
+    //         Debug.Log("3OVER HEREEEEEEEEEEEEEE");
+    //     Debug.DrawRay(transform.position, teammate.transform.position, Color.green);
+    //     // Debug.Log(transform.position);
+    //     // Debug.Log(teammate.transform.position);
+    //     // Handles.DrawBezier(new Vector3(-0.0f, 0.0f, 0.0f), new Vector3(-2.0f, 2.0f, 0.0f), Vector3.zero, Vector3.zero, Color.red, null, 2f);
+    //     // Handles.DrawBezier(transform.position, Vector3.zero, Vector3.zero, Vector3.zero, Color.red, null, 2f);
+    // }
+
     [Command]
-    void CmdDrawLine()
+    void CmdDeactivateTeammateRagdoll()
     {
-        RpcDrawLine();
+        RpcDeactivateTeammateRagdoll();
     }
 
     [ClientRpc]
-    void RpcDrawLine()
+    void RpcDeactivateTeammateRagdoll()
     {
-        if (!teammate)
-            Debug.Log("3OVER HEREEEEEEEEEEEEEE");
-        Debug.DrawRay(transform.position, teammate.transform.position, Color.green);
-        // Debug.Log(transform.position);
-        // Debug.Log(teammate.transform.position);
-        // Handles.DrawBezier(new Vector3(-0.0f, 0.0f, 0.0f), new Vector3(-2.0f, 2.0f, 0.0f), Vector3.zero, Vector3.zero, Color.red, null, 2f);
-        // Handles.DrawBezier(transform.position, Vector3.zero, Vector3.zero, Vector3.zero, Color.red, null, 2f);
-    }
-
-    void DeactivateTeammateRagdoll()
-    {
-        if (!teammate)
-            Debug.Log("4OVER HEREEEEEEEEEEEEEE");
+        teammate.transform.parent = null;
         GameObject[] teammateRagdollObjects = GameObject.FindGameObjectsWithTag("Ragdoll");
         foreach (GameObject ragdollObj in teammateRagdollObjects)
         {
@@ -146,76 +150,72 @@ public class PickUpThrow : NetworkBehaviour
     }
 
 
+    // [Command]
+    // void CmdPutDown()
+    // {
+    //     RpcPutDown();
+    // }
+
+    // [ClientRpc]
+    // void RpcPutDown()
+    // {
+    //     DeactivateTeammateRagdoll();
+    //     teammate = null;
+    // }
+
+    // [Command]
+    // void CmdThrow()
+    // {
+    //     RpcThrow();
+    // }
+
+    // [ClientRpc]
+    // void RpcThrow()
+    // {
+    //     DeactivateTeammateRagdoll();
+    //     CmdSetPutDownOrThrowStates();
+    //     teammateRb.AddForce(this.transform.forward * throwForce);
+    //     teammate = null;
+    // }
+
     [Command]
-    void CmdPutDown()
+    void CmdSetPutDownOrThrowStates()
     {
-        RpcPutDown();
-    }
-
-    [ClientRpc]
-    void RpcPutDown()
-    {
-        SetPutDownOrThrowStates();
-        DeactivateTeammateRagdoll();
-        teammate = null;
-    }
-
-    [Command]
-    void CmdThrow()
-    {
-        RpcThrow();
-    }
-
-    [ClientRpc]
-    void RpcThrow()
-    {
-        DeactivateTeammateRagdoll();
-        SetPutDownOrThrowStates();
-        teammateRb.AddForce(this.transform.forward * throwForce);
-        teammate = null;
-    }
-
-    void SetPutDownOrThrowStates()
-    {
-        if (!teammate)
-            Debug.Log("5OVER HEREEEEEEEEEEEEEE");
         isPicker = false;
         toActivateTeammateRagdoll = false;
         teammateScript.isPickedUp = false;
         teammateScript.isLetGo = true;
-        teammate.transform.parent = null;
-        teammateRb.useGravity = true;
     }
 
-    void OnCollisionEnter(Collision other)
-    {
-        if (!isLocalPlayer)
-            return;
+    // void OnCollisionEnter(Collision other)
+    // {
+    //     if (!isLocalPlayer)
+    //         return;
 
-        if (isLetGo && other.gameObject.tag == "Ground")
-            CmdOnCollisionWithGround();
-    }
+    //     if (isLetGo && other.gameObject.tag == "Ground")
+    //         CmdOnCollisionWithGround();
+    // }
 
-    [Command]
-    void CmdOnCollisionWithGround()
-    {
-        RpcOnCollisionWithGround();
-    }
+    // [Command]
+    // void CmdOnCollisionWithGround()
+    // {
+    //     RpcOnCollisionWithGround();
+    // }
 
-    [ClientRpc]
-    void RpcOnCollisionWithGround()
-    {
-        StartCoroutine(OnCollisionWithGround());
-    }
+    // [ClientRpc]
+    // void RpcOnCollisionWithGround()
+    // {
+    //     StartCoroutine(OnCollisionWithGround());
+    // }
 
-    IEnumerator OnCollisionWithGround()
-    {
-        sphereCollider.center = new Vector3(-0.03f, 0.90f, -0.03f);
-        yield return new WaitForSeconds(1);
-        GetComponent<ParticleSystem>().Play();
-        yield return new WaitForSeconds(2);
-        GetComponent<Animator>().enabled = true;
-        sphereCollider.center = originalCenter;
-        isLetGo = false;
-    }
+    // IEnumerator OnCollisionWithGround()
+    // {
+    //     sphereCollider.center = new Vector3(-0.03f, 0.90f, -0.03f);
+    //     yield return new WaitForSeconds(1);
+    //     GetComponent<ParticleSystem>().Play();
+    //     yield return new WaitForSeconds(2);
+    //     GetComponent<Animator>().enabled = true;
+    //     sphereCollider.center = originalCenter;
+    //     isLetGo = false;
+    // }
 }

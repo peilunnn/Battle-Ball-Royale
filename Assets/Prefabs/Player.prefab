@@ -41,7 +41,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.03330348, y: 0.00012134854, z: -0.12401849}
+  m_ConnectedAnchor: {x: 0.03330348, y: 0.00012134854, z: -0.124018505}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: -1, z: 0}
   m_TwistLimitSpring:
@@ -102,7 +102,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -0.14250714, z: -1.7624226}
+  m_ConnectedAnchor: {x: -3.0999767e-32, y: -0.14250714, z: -1.7624226}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -252,7 +252,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.26151603, y: 0.000046551228, z: 0.0032294123}
+  m_ConnectedAnchor: {x: -0.26151603, y: 0.000046506524, z: 0.0032293573}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -327,7 +327,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: -1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.3583524, y: 0.020167727, z: 0.00000026199268}
+  m_ConnectedAnchor: {x: -0.3583524, y: 0.020167604, z: 0.00000023143366}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -401,7 +401,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.51623595, y: -0.057640783, z: 1.7056206e-16}
+  m_ConnectedAnchor: {x: -0.516236, y: -0.057640668, z: 0.000000059604645}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: -1, z: 0}
   m_TwistLimitSpring:
@@ -476,7 +476,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.24842587, y: 0.022103593, z: -0.006959393}
+  m_ConnectedAnchor: {x: 0.24842587, y: 0.022103628, z: -0.0069593973}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -626,7 +626,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.26151618, y: -0.00004663854, z: -0.0032301638}
+  m_ConnectedAnchor: {x: 0.26151615, y: -0.000046567293, z: -0.0032301731}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: -1, z: 0}
   m_TwistLimitSpring:
@@ -701,7 +701,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.033303652, y: 0.000121303834, z: 0.12401903}
+  m_ConnectedAnchor: {x: 0.033303652, y: 0.000121303834, z: 0.124019}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -775,7 +775,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.26471853, y: 0.03085101, z: 0}
+  m_ConnectedAnchor: {x: -0.2647186, y: 0.030850973, z: 0}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: -1, z: 0}
   m_TwistLimitSpring:
@@ -850,7 +850,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.35835308, y: -0.020167505, z: -0.00000028451905}
+  m_ConnectedAnchor: {x: 0.3583531, y: -0.020167623, z: -0.000000253669}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -925,7 +925,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.24842575, y: -0.02210362, z: 0.006960082}
+  m_ConnectedAnchor: {x: -0.24842575, y: -0.022103652, z: 0.0069601457}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -1178,9 +1178,11 @@ MonoBehaviour:
   syncInterval: 0.1
   isPicker: 0
   isPickedUp: 0
-  activatedOtherPlayerRagdoll: 0
+  toActivateTeammateRagdoll: 0
   isLetGo: 0
-  otherPlayer: {fileID: 0}
+  teammate: {fileID: 0}
+  sphereCollider: {fileID: 4635997670392463145}
+  destPos: {fileID: 4635997670356395815}
 --- !u!95 &7899800692230665678
 Animator:
   serializedVersion: 3

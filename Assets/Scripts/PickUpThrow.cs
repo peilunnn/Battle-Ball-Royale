@@ -12,13 +12,13 @@ public class PickUpThrow : NetworkBehaviour
     [SyncVar] [SerializeField] bool isLetGo = false;
 
 
-    Transform destPos;
     [SyncVar] [SerializeField] GameObject teammate;
     PickUpThrow teammateScript;
     Rigidbody teammateRb;
 
-    SphereCollider sphereCollider;
+    [SerializeField] SphereCollider sphereCollider;
     Vector3 originalCenter;
+    [SerializeField] Transform destPos;
     float throwForce = 1000;
 
     void Awake()
@@ -29,8 +29,6 @@ public class PickUpThrow : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        destPos = transform.Find("Destination");
-        sphereCollider = GetComponent<SphereCollider>();
         originalCenter = sphereCollider.center;
     }
 
@@ -44,7 +42,7 @@ public class PickUpThrow : NetworkBehaviour
         if (!isPicker && !isPickedUp && Input.GetKeyDown(KeyCode.E))
             CmdSetPickUpStates();
 
-        if (toActivateTeammateRagdoll)
+        if (isPicker && teammate && toActivateTeammateRagdoll)
         {
             // CmdDrawLine();
             CmdActivateTeammateRagdoll();
@@ -93,20 +91,13 @@ public class PickUpThrow : NetworkBehaviour
     [ClientRpc]
     void RpcActivateTeammateRagdoll()
     {
+        // SERVER CALLED FUNCTION ON OTHER PLAYERS BUT WE DONT WANT THEM TO EXECUTE THE CODE BELOW
         if (!teammate)
-        {
-            Debug.Log("2OVER HEREEEEEEEEEEEEEE");
             return;
-        }
+
         teammate.transform.position = destPos.position;
         teammate.transform.parent = destPos.transform;
         teammate.GetComponent<Animator>().enabled = false;
-        GameObject[] teammateRagdollObjects = GameObject.FindGameObjectsWithTag("Ragdoll");
-        foreach (GameObject ragdollObj in teammateRagdollObjects)
-        {
-            Rigidbody ragdollRb = ragdollObj.GetComponent<Rigidbody>();
-            ragdollRb.useGravity = false;
-        }
         teammateRb = teammate.GetComponent<Rigidbody>();
         teammateRb.useGravity = false;
     }
@@ -139,12 +130,6 @@ public class PickUpThrow : NetworkBehaviour
     void RpcDeactivateTeammateRagdoll()
     {
         teammate.transform.parent = null;
-        GameObject[] teammateRagdollObjects = GameObject.FindGameObjectsWithTag("Ragdoll");
-        foreach (GameObject ragdollObj in teammateRagdollObjects)
-        {
-            Rigidbody ragdollRb = ragdollObj.GetComponent<Rigidbody>();
-            ragdollRb.useGravity = true;
-        }
         teammateRb = teammate.GetComponent<Rigidbody>();
         teammateRb.useGravity = true;
     }

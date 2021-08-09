@@ -47,6 +47,10 @@ namespace DM
         CameraManager camManager;   //for caching CameraManager script
         [SerializeField] AudioSource footstep;
 
+        void Awake()
+        {
+            footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
+        }
         void Start() // Initiallizing camera, animator, rigidboy
         {
             SetupAnimator();
@@ -56,7 +60,6 @@ namespace DM
                 return;
             camManager = CameraManager.singleton;
             camManager.Init(this.transform);
-            footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
         }
 
         void SetupAnimator()//Setting up Animator component in the hierarchy.
@@ -96,8 +99,10 @@ namespace DM
 
             GetInput();     //getting control input from keyboard or joypad
             UpdateStates();   //Updating anything related to character's actions.
-            if (sprint)
+            if (onGround && sprint)
+            {
                 CmdPlayFootstepSound();
+            }
         }
 
         [Command]
@@ -109,7 +114,10 @@ namespace DM
         [ClientRpc]
         void RpcPlayFootstepSound()
         {
-            footstep.Play();
+            if (!footstep)
+                Debug.Log("no footstep");
+            if (footstep && !(footstep.isPlaying))
+                footstep.Play();
         }
 
         void GetInput() //getting various inputs from keyboard or joypad.

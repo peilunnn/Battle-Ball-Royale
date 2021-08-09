@@ -17,13 +17,19 @@ public class PickUpThrow : NetworkBehaviour
 
     [SerializeField] SphereCollider sphereCollider;
     Vector3 originalCenter;
+    Vector3 shrunkCenter = new Vector3(-0.03f, 0.90f, -0.03f);
+    Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
+
     [SerializeField] Transform destPos;
     [SerializeField] LineRenderer lineOfFire;
     float throwForce = 1000;
+    [SerializeField] AudioSource impactSound;
+
 
     void Awake()
     {
         Physics.IgnoreLayerCollision(9, 8, true);
+        impactSound = GameObject.Find("Impact").GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -55,7 +61,7 @@ public class PickUpThrow : NetworkBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
             {
-                RemoveLineOfFire();
+                CmdRemoveLineOfFire();
                 CmdDeactivateTeammateRagdoll();
                 CmdSetPutDownOrThrowStates();
 
@@ -109,7 +115,14 @@ public class PickUpThrow : NetworkBehaviour
         lineOfFire.SetPosition(1, transform.forward * 10 + transform.position);
     }
 
-    void RemoveLineOfFire()
+    [Command]
+    void CmdRemoveLineOfFire()
+    {
+        RpcRemoveLineOfFire();
+    }
+
+    [ClientRpc]
+    void RpcRemoveLineOfFire()
     {
         lineOfFire.enabled = false;
     }
@@ -160,8 +173,18 @@ public class PickUpThrow : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (isLetGo && other.gameObject.tag == "Ground")
-            CmdOnCollisionWithGround();
+        if (isLetGo)
+        {
+            sphereCollider.center = enlargedCenter;
+
+            if (other.gameObject.tag == "Ground")
+                CmdOnCollisionWithGround();
+
+            else if (other.gameObject.tag == "Player")
+            {
+                CmdOnCollisionWithOpponent();
+            }
+        }
     }
 
     [Command]
@@ -178,12 +201,32 @@ public class PickUpThrow : NetworkBehaviour
 
     IEnumerator OnCollisionWithGround()
     {
-        sphereCollider.center = new Vector3(-0.03f, 0.90f, -0.03f);
+        transform.parent = null;
+        GetComponent<Rigidbody>().useGravity = true;
+        sphereCollider.center = shrunkCenter;
         yield return new WaitForSeconds(1);
         GetComponent<ParticleSystem>().Play();
         yield return new WaitForSeconds(2);
         GetComponent<Animator>().enabled = true;
         sphereCollider.center = originalCenter;
         isLetGo = false;
+    }
+
+    [Command]
+    void CmdOnCollisionWithOpponent()
+    {
+        RpcOnCollisionWithOpponent();
+    }
+
+    [ClientRpc]
+    void RpcOnCollisionWithOpponent()
+    {
+        transform.parent = null;
+        GetComponent<Rigidbody>().useGravity = true;
+        impactSound.Play();
+        isLetGo = false;
+        GetComponent<ParticleSystem>().Play();
+        GetComponent<Animator>().enabled = true;
+        sphereCollider.center = originalCenter;
     }
 }

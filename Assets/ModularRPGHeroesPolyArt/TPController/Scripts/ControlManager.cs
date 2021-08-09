@@ -45,6 +45,7 @@ namespace DM
         [HideInInspector]
         public Rigidbody rigid;     //for caching Rigidbody component
         CameraManager camManager;   //for caching CameraManager script
+        [SerializeField] AudioSource footstep;
 
         void Start() // Initiallizing camera, animator, rigidboy
         {
@@ -55,6 +56,7 @@ namespace DM
                 return;
             camManager = CameraManager.singleton;
             camManager.Init(this.transform);
+            footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
         }
 
         void SetupAnimator()//Setting up Animator component in the hierarchy.
@@ -93,10 +95,22 @@ namespace DM
                 return;
 
             GetInput();     //getting control input from keyboard or joypad
-            UpdateStates();   //Updating anything related to character's actions.         
+            UpdateStates();   //Updating anything related to character's actions.
+            if (sprint)
+                CmdPlayFootstepSound();
         }
 
+        [Command]
+        void CmdPlayFootstepSound()
+        {
+            RpcPlayFootstepSound();
+        }
 
+        [ClientRpc]
+        void RpcPlayFootstepSound()
+        {
+            footstep.Play();
+        }
 
         void GetInput() //getting various inputs from keyboard or joypad.
         {

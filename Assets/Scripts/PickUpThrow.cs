@@ -77,7 +77,7 @@ public class PickUpThrow : NetworkBehaviour
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {
-            if (hit.collider.tag != "Player")
+            if (hit.collider.tag != gameObject.tag)
                 return;
 
             // RAYCAST HIT THE OTHER PLAYER, SET BOTH PLAYERS' STATES
@@ -106,7 +106,6 @@ public class PickUpThrow : NetworkBehaviour
         teammate.GetComponent<Animator>().enabled = false;
         teammate.GetComponent<Rigidbody>().useGravity = false;
     }
-
 
     void DrawLineOfFire()
     {
@@ -177,13 +176,13 @@ public class PickUpThrow : NetworkBehaviour
         {
             sphereCollider.center = enlargedCenter;
 
-            if (other.gameObject.tag == "Ground")
-                CmdOnCollisionWithGround();
-
-            else if (other.gameObject.tag == "Player")
-            {
+            // HIT OPPONENT
+            if (other.gameObject.tag == "Player")
                 CmdOnCollisionWithOpponent();
-            }
+
+            // HIT GROUND OR TEAMMATE
+            else
+                CmdOnCollisionWithGround();
         }
     }
 
@@ -203,12 +202,14 @@ public class PickUpThrow : NetworkBehaviour
     {
         transform.parent = null;
         GetComponent<Rigidbody>().useGravity = true;
+
         sphereCollider.center = shrunkCenter;
         yield return new WaitForSeconds(1);
         GetComponent<ParticleSystem>().Play();
         yield return new WaitForSeconds(2);
         GetComponent<Animator>().enabled = true;
         sphereCollider.center = originalCenter;
+
         isLetGo = false;
     }
 
@@ -223,10 +224,13 @@ public class PickUpThrow : NetworkBehaviour
     {
         transform.parent = null;
         GetComponent<Rigidbody>().useGravity = true;
+
         impactSound.Play();
-        isLetGo = false;
+
         GetComponent<ParticleSystem>().Play();
         GetComponent<Animator>().enabled = true;
         sphereCollider.center = originalCenter;
+
+        isLetGo = false;
     }
 }

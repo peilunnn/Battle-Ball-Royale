@@ -2370,6 +2370,66 @@ Transform:
   m_Father: {fileID: 609379107}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -19.093}
+--- !u!1 &1518911740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1518911742}
+  - component: {fileID: 1518911741}
+  m_Layer: 0
+  m_Name: MyGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1518911741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518911740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 655ce278b1338ae40beb61bd102d61f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allPlayersBeforeGame:
+  - {fileID: 4635997670392463147, guid: e23bb30af4bf0514c92b9e1ded6ddc89, type: 3}
+  - {fileID: 4635997670392463147, guid: f72b7250ca3a34a488428e28d1735ab6, type: 3}
+  - {fileID: 4635997670392463147, guid: 2819f66d2af347f4b9550b717d3771df, type: 3}
+  - {fileID: 4635997670392463147, guid: 658cb92ee134ba24380143d87ce61906, type: 3}
+  - {fileID: 4635997670392463147, guid: 45e36dc740364b3438b863cec102005f, type: 3}
+  - {fileID: 4635997670392463147, guid: b6ef7dee38ba5fd408efde449f978c4c, type: 3}
+  - {fileID: 4635997670392463147, guid: 574ea52d7aa2d2a4d9fb3ccd7a080011, type: 3}
+  - {fileID: 4635997670392463147, guid: 60174cfb9d20c6d40881d13e1951a41f, type: 3}
+  - {fileID: 4635997670392463147, guid: 60054049905037345ae7177611a54a97, type: 3}
+  - {fileID: 4635997670392463147, guid: 3a6c147e26b7ee349bd8cd7d9327001f, type: 3}
+  - {fileID: 4635997670392463147, guid: b3aba22c001c6a14b92417702a320be5, type: 3}
+  - {fileID: 4635997670392463147, guid: 6078c04721e93e44db9f9f0cf383cf84, type: 3}
+  allTeamsString: AB
+  randomTeamLetter: 0
+  randomPlayerIndex: 0
+  gameInProgress: 0
+--- !u!4 &1518911742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518911740}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6320101, y: 6.2296786, z: -40.479214}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1552471759
 GameObject:
   m_ObjectHideFlags: 0
@@ -2853,7 +2913,7 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 1757768765}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 3
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
@@ -2874,7 +2934,7 @@ MonoBehaviour:
   - {fileID: 4635997670392463147, guid: 3a6c147e26b7ee349bd8cd7d9327001f, type: 3}
   - {fileID: 4635997670392463147, guid: b3aba22c001c6a14b92417702a320be5, type: 3}
   - {fileID: 4635997670392463147, guid: 6078c04721e93e44db9f9f0cf383cf84, type: 3}
-  - {fileID: 1804888568834042, guid: f173ca0ab2fe2784db2c1a41eae89793, type: 3}
+  gameManager: {fileID: 1518911741}
 --- !u!4 &1757768767
 Transform:
   m_ObjectHideFlags: 0

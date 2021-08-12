@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Ragdoll
+  - TeamA
+  - TeamB
   layers:
   - Default
   - TransparentFX

@@ -25,11 +25,13 @@ public class PickUpThrow : NetworkBehaviour
     float throwForce = 1000;
     [SerializeField] AudioSource impactSound;
 
+    [SerializeField] MyGameManager gameManager;
 
     void Awake()
     {
         Physics.IgnoreLayerCollision(9, 8, true);
         impactSound = GameObject.Find("Impact").GetComponent<AudioSource>();
+        gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
     }
 
     // Start is called before the first frame update
@@ -43,6 +45,8 @@ public class PickUpThrow : NetworkBehaviour
     {
         if (!isLocalPlayer)
             return;
+
+        Debug.Log("in pick up throw function");
 
         // IF PLAYER PRESSES E, SET STATES
         if (!isPicker && !isPickedUp && Input.GetKeyDown(KeyCode.E))
@@ -74,9 +78,11 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdSetPickUpStates()
     {
+        Debug.Log("sending ray");
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {
+            // IF I TRY TO PICK UP SOMEONE WHO IS NOT MY TEAMMATE, DONT DO ANYTHING 
             if (hit.collider.tag != gameObject.tag)
                 return;
 
@@ -177,7 +183,7 @@ public class PickUpThrow : NetworkBehaviour
             sphereCollider.center = enlargedCenter;
 
             // HIT OPPONENT
-            if (other.gameObject.tag == "Player")
+            if ((gameObject.tag == "TeamA" && other.gameObject.tag == "TeamB") || (gameObject.tag == "TeamB" && other.gameObject.tag == "TeamA"))
                 CmdOnCollisionWithOpponent();
 
             // HIT GROUND OR TEAMMATE

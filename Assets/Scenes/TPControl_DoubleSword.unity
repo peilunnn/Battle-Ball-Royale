@@ -2785,8 +2785,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1757768767}
   - component: {fileID: 1757768765}
-  - component: {fileID: 1757768764}
   - component: {fileID: 1757768766}
+  - component: {fileID: 1757768764}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -2841,7 +2841,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1757768763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
+  m_Script: {fileID: 11500000, guid: d5f8116361c56f94fa50e76259abf907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
@@ -2862,10 +2862,19 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 1
   spawnPrefabs:
-  - {fileID: 916587133316553646, guid: 220e8707c77133b4db1ee6d7e8a7e879, type: 3}
-  - {fileID: 2008338986268417442, guid: aa54646c7ee9f424cbd8469b6dd9f5de, type: 3}
-  - {fileID: 9143194379445510612, guid: 027b7e6c88c26a04aa8194f6659dba71, type: 3}
-  - {fileID: 3381327740518987422, guid: 9f9efd3b025d18c4a85f1e9c2540958d, type: 3}
+  - {fileID: 4635997670392463147, guid: e23bb30af4bf0514c92b9e1ded6ddc89, type: 3}
+  - {fileID: 4635997670392463147, guid: f72b7250ca3a34a488428e28d1735ab6, type: 3}
+  - {fileID: 4635997670392463147, guid: 2819f66d2af347f4b9550b717d3771df, type: 3}
+  - {fileID: 4635997670392463147, guid: 658cb92ee134ba24380143d87ce61906, type: 3}
+  - {fileID: 4635997670392463147, guid: 45e36dc740364b3438b863cec102005f, type: 3}
+  - {fileID: 4635997670392463147, guid: b6ef7dee38ba5fd408efde449f978c4c, type: 3}
+  - {fileID: 4635997670392463147, guid: 574ea52d7aa2d2a4d9fb3ccd7a080011, type: 3}
+  - {fileID: 4635997670392463147, guid: 60174cfb9d20c6d40881d13e1951a41f, type: 3}
+  - {fileID: 4635997670392463147, guid: 60054049905037345ae7177611a54a97, type: 3}
+  - {fileID: 4635997670392463147, guid: 3a6c147e26b7ee349bd8cd7d9327001f, type: 3}
+  - {fileID: 4635997670392463147, guid: b3aba22c001c6a14b92417702a320be5, type: 3}
+  - {fileID: 4635997670392463147, guid: 6078c04721e93e44db9f9f0cf383cf84, type: 3}
+  - {fileID: 1804888568834042, guid: f173ca0ab2fe2784db2c1a41eae89793, type: 3}
 --- !u!4 &1757768767
 Transform:
   m_ObjectHideFlags: 0

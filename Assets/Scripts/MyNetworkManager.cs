@@ -1,64 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using Mirror;
+using kcp2k;
 
 public class MyNetworkManager : NetworkManager
 {
-    GameObject[] allPlayers;
-    GameObject[] teamAPrefabs;
-    GameObject[] teamBPrefabs;
+    Dictionary<string, GameObject> teamADict = new Dictionary<string, GameObject>();
 
-    int randomNumber;
+    Dictionary<string, GameObject> teamBDict = new Dictionary<string, GameObject>();
 
-    // Transform[] teamASpawnPoints;
-    // Transform[] teamBSpawnPoints;
+    int randomPlayerIndex;
+    string allTeams = "AB";
+    char randomTeamLetter;
 
     // Start is called before the first frame update
-    new void Start()
+    public override void Start()
     {
-        // GameObject[] allPlayers = Resources.LoadAll("SpawnablePrefabs", typeof(GameObject)).Cast<GameObject>().ToArray();
-        allPlayers = Resources.LoadAll<GameObject>("SpawnablePrefabs");
+        GameObject[] allPlayerPrefabsList = Resources.LoadAll<GameObject>("SpawnablePrefabs");
 
-        for (int i=0; i<allPlayers.Length; i++)
-            Debug.Log($"name is {allPlayers[i].name}, type is {allPlayers[i].GetType()}");
+        for (int j = 0; j < allPlayerPrefabsList.Length / 2; j++)
+            teamADict.Add($"PlayerA{j}", allPlayerPrefabsList[j]);
 
-        randomNumber = Random.Range(0,5);
+        for (int k = allPlayerPrefabsList.Length / 2; k < allPlayerPrefabsList.Length; k++)
+            teamBDict.Add($"PlayerB{k - allPlayerPrefabsList.Length / 2}", allPlayerPrefabsList[k]);
+
+        // foreach (KeyValuePair<string, GameObject> item in teamBDict)
+        //     Debug.Log($"{item.Key}, {item.Value}");
+
+        base.Start();
     }
 
-    void Update () 
+    public override void OnServerAddPlayer(NetworkConnection conn)
     {
-        randomNumber=Random.Range(0,5);
-    }
+        randomTeamLetter = allTeams[Random.Range(0, 2)];
+        randomPlayerIndex = Random.Range(0, 6);
+        Debug.Log($"team {randomTeamLetter}, player {randomPlayerIndex}");
+        playerPrefab = randomTeamLetter == 'A' ? teamADict[$"PlayerA{randomPlayerIndex}"] : teamBDict[$"PlayerB{randomPlayerIndex}"];
+        Debug.Log(playerPrefab);
 
-    //  public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
-    //  {
-    //     if (randomNumber == 0) {
-    //          Debug.Log("player0");
-    //          playerPrefab = (GameObject)GameObject.Instantiate(allPlayers[0], Vector3.zero, Quaternion.identity);
-    //          NetworkServer.AddPlayerForConnection(conn, allPlayers[0], playerControllerId);        }
-    //     else
-    //         Debug.Log("not 0");
-    //     // if (randomNumber == 1) {
-    //     //      Debug.Log("playerPrefab1");
-    //     //      playerPrefab = (GameObject)GameObject.Instantiate(playerPrefab1, Vector3.zero, Quaternion.identity);
-    //     //      NetworkServer.AddPlayerForConnection(conn, playerPrefab, playerControllerId);        }
-    //     // if (randomNumber == 2) {
-    //     //      Debug.Log("playerPrefab2");
-    //     //      playerPrefab = (GameObject)GameObject.Instantiate(playerPrefab2, Vector3.zero, Quaternion.identity);
-    //     //      NetworkServer.AddPlayerForConnection(conn, playerPrefab, playerControllerId);        }
-    //     // if (randomNumber == 3) {
-    //     //      Debug.Log("playerPrefab3");
-    //     //      playerPrefab = (GameObject)GameObject.Instantiate(playerPrefab3, Vector3.zero, Quaternion.identity);
-    //     //      NetworkServer.AddPlayerForConnection(conn, playerPrefab, playerControllerId);        }
-    //     // if (randomNumber == 4) {
-    //     //      Debug.Log("playerPrefab4");
-    //     //      playerPrefab = (GameObject)GameObject.Instantiate(playerPrefab4, Vector3.zero, Quaternion.identity);
-    //     //      NetworkServer.AddPlayerForConnection(conn, playerPrefab, playerControllerId);        }
-    //     // if (randomNumber == 5) {
-    //     //      Debug.Log("playerPrefab4");
-    //     //      playerPrefab = (GameObject)GameObject.Instantiate(playerPrefab4, Vector3.zero, Quaternion.identity);
-    //     //      NetworkServer.AddPlayerForConnection(conn, playerPrefab, playerControllerId);        }
-    //  }
+        base.OnServerAddPlayer(conn);
+    }
 }

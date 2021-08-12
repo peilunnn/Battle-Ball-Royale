@@ -43,10 +43,8 @@ public class PickUpThrow : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isLocalPlayer)
+        if (!gameManager.gameInProgress || !isLocalPlayer)
             return;
-
-        Debug.Log("in pick up throw function");
 
         // IF PLAYER PRESSES E, SET STATES
         if (!isPicker && !isPickedUp && Input.GetKeyDown(KeyCode.E))
@@ -78,7 +76,6 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdSetPickUpStates()
     {
-        Debug.Log("sending ray");
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {

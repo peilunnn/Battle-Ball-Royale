@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class MyGameManager : MonoBehaviour
+public class MyGameManager : NetworkBehaviour
 {
     GameObject playerPrefab;
     public List<GameObject> allPlayersBeforeGame = new List<GameObject>();
@@ -11,7 +12,7 @@ public class MyGameManager : MonoBehaviour
     public string allTeamsString = "AB";
     public char randomTeamLetter;
     public int randomPlayerIndex;
-    public bool gameInProgress = false;
+    [SyncVar] public bool gameInProgress = false;
 
 
     // Start is called before the first frame update
@@ -29,11 +30,14 @@ public class MyGameManager : MonoBehaviour
 
     void Update()
     {
-        if (allPlayersBeforeGame.Count < 11)
-        {
-            Debug.Log("start game");
-            gameInProgress = true;
-        }
+        if (!gameInProgress && allPlayersBeforeGame.Count < 10)
+            RpcGameInProgress();
+    }
+
+    [ClientRpc]
+    void RpcGameInProgress()
+    {
+        gameInProgress = true;
     }
 
     public GameObject GetRandomPlayer()

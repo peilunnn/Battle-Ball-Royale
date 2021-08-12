@@ -2,63 +2,72 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.UI;
 
 public class MyGameManager : NetworkBehaviour
 {
     GameObject playerPrefab;
-    public List<GameObject> allPlayersBeforeGame = new List<GameObject>();
-    public Dictionary<string, GameObject> teamADict = new Dictionary<string, GameObject>();
-    public Dictionary<string, GameObject> teamBDict = new Dictionary<string, GameObject>();
-    public string allTeamsString = "AB";
-    public char randomTeamLetter;
-    public int randomPlayerIndex;
+    public List<GameObject> availablePlayers = new List<GameObject>();
+
     [SyncVar] public bool gameInProgress = false;
 
+    [SerializeField] int temp;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        for (int j = 0; j < allPlayersBeforeGame.Count / 2; j++)
-            teamADict.Add($"PlayerA{j}", allPlayersBeforeGame[j]);
+    [SerializeField] Text startGameText;
+    [SerializeField] Text countdownText3;
+    [SerializeField] Text countdownText2;
+    [SerializeField] Text countdownText1;
 
-        for (int k = allPlayersBeforeGame.Count / 2; k < allPlayersBeforeGame.Count; k++)
-            teamBDict.Add($"PlayerB{k - allPlayersBeforeGame.Count / 2}", allPlayersBeforeGame[k]);
-
-        // foreach (KeyValuePair<string, GameObject> item in teamBDict)
-        //     Debug.Log($"{item.Key}, {item.Value}");
-    }
 
     void Update()
     {
-        if (!gameInProgress && allPlayersBeforeGame.Count < 10)
-            RpcGameInProgress();
+        Debug.Log($"{availablePlayers.Count}, {temp}");
+        // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 10 IE. 3 PLAYERS HAVE JOINED, START THE GAME 
+        if (!gameInProgress && availablePlayers.Count < temp)
+        {
+            RpcSetGameInProgress();
+            RpcSetStartGameUI();
+        }
     }
 
     [ClientRpc]
-    void RpcGameInProgress()
+    void RpcSetGameInProgress()
     {
         gameInProgress = true;
     }
 
+    [ClientRpc]
+    void RpcSetStartGameUI()
+    {
+        StartCoroutine(SetStartGameUI());
+    }
+
+    IEnumerator SetStartGameUI()
+    {
+        startGameText.enabled = true;
+
+        yield return new WaitForSeconds(4);
+
+        startGameText.enabled = false;
+        countdownText3.enabled = true;
+
+        yield return new WaitForSeconds(2);
+
+        countdownText3.enabled = false;
+        countdownText2.enabled = true;
+
+        yield return new WaitForSeconds(2);
+
+        countdownText2.enabled = false;
+        countdownText1.enabled = true;
+
+        yield return new WaitForSeconds(2);
+
+        countdownText1.enabled = false;
+    }
+
     public GameObject GetRandomPlayer()
     {
-        // GENERATE RANDOM TEAM LETTER AND INDEX
-        randomTeamLetter = allTeamsString[Random.Range(0, 2)];
-        randomPlayerIndex = Random.Range(0, 6);
-
-        // SET RANDOM PLAYER PREFAB AND SET HIS TAG
-        if (randomTeamLetter == 'A')
-        {
-            playerPrefab = teamADict[$"PlayerA{randomPlayerIndex}"];
-            playerPrefab.tag = "TeamA";
-        }
-
-        else
-        {
-            playerPrefab = teamBDict[$"PlayerB{randomPlayerIndex}"];
-            playerPrefab.tag = "TeamB";
-        }
-
-        return playerPrefab;
+        return availablePlayers[Random.Range(0, availablePlayers.Count)];
     }
 }

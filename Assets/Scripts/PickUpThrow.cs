@@ -1,44 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using UnityEditor;
 
 public class PickUpThrow : NetworkBehaviour
 {
     [SyncVar] [SerializeField] bool isPicker = false;
     [SyncVar] [SerializeField] bool isPickedUp = false;
     [SyncVar] [SerializeField] bool toActivateTeammateRagdoll = false;
-    [SyncVar] [SerializeField] bool isLetGo = false;
-
+    [SyncVar] public bool isLetGo = false;
 
     [SyncVar] [SerializeField] GameObject teammate;
     PickUpThrow teammateScript;
 
-    [SerializeField] SphereCollider sphereCollider;
-    Vector3 originalCenter;
-    Vector3 shrunkCenter = new Vector3(-0.03f, 0.90f, -0.03f);
-    Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
-
     [SerializeField] Transform destPos;
     [SerializeField] LineRenderer lineOfFire;
     float throwForce = 1000;
-    [SerializeField] AudioSource impactSound;
 
-    [SerializeField] MyGameManager gameManager;
+    MyGameManager gameManager;
 
     void Awake()
     {
         Physics.IgnoreLayerCollision(9, 8, true);
-        impactSound = GameObject.Find("Impact").GetComponent<AudioSource>();
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        originalCenter = sphereCollider.center;
-    }
 
     // Update is called once per frame
     void Update()
@@ -64,13 +48,16 @@ public class PickUpThrow : NetworkBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
             {
                 CmdRemoveLineOfFire();
-                CmdDeactivateTeammateRagdoll();
                 CmdSetPutDownOrThrowStates();
+                // CmdDeactivateTeammateRagdoll();
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                     CmdThrow();
             }
         }
+
+        if (isLetGo)
+            CmdDeactivateOwnRagdoll();
     }
 
     [Command]
@@ -83,7 +70,7 @@ public class PickUpThrow : NetworkBehaviour
             if (hit.collider.tag != gameObject.tag)
                 return;
 
-            // RAYCAST HIT THE OTHER PLAYER, SET BOTH PLAYERS' STATES
+            // RAYCAST HIT TEAMMATE, SET BOTH PLAYERS' STATES
             isPicker = true;
             toActivateTeammateRagdoll = true;
             teammate = hit.collider.gameObject;
@@ -109,6 +96,7 @@ public class PickUpThrow : NetworkBehaviour
         teammate.GetComponent<Animator>().enabled = false;
         teammate.GetComponent<Rigidbody>().useGravity = false;
     }
+
 
     void DrawLineOfFire()
     {
@@ -141,8 +129,24 @@ public class PickUpThrow : NetworkBehaviour
         if (!teammate)
             return;
 
+        Debug.Log("in deactivate teammate ragdoll");
+
         teammate.transform.parent = null;
         teammate.GetComponent<Rigidbody>().useGravity = true;
+    }
+
+    [Command]
+    void CmdDeactivateOwnRagdoll()
+    {
+        RpcDeactivateOwnRagdoll();
+    }
+
+    [ClientRpc]
+    void RpcDeactivateOwnRagdoll()
+    {
+        Debug.Log("in deactivate own ragdoll");
+        transform.parent = null;
+        GetComponent<Rigidbody>().useGravity = true;
     }
 
     [Command]
@@ -163,77 +167,90 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdSetPutDownOrThrowStates()
     {
+        teammateScript.isLetGo = true;
+        teammateScript.isPickedUp = false;
         isPicker = false;
         toActivateTeammateRagdoll = false;
-        teammateScript.isPickedUp = false;
-        teammateScript.isLetGo = true;
         // teammate = null;
     }
 
-    void OnCollisionEnter(Collision other)
-    {
-        if (!isLocalPlayer)
-            return;
+    // void OnCollisionEnter(Collision other)
+    // {
+    //     if (!isLocalPlayer)
+    //         return;
 
-        if (isLetGo)
-        {
-            sphereCollider.center = enlargedCenter;
+    //     if (isLetGo)
+    //     {
+    //         // MAKE COLLIDER BIGGER FOR EASIER TARGETING IN THE AIR
+    //         sphereCollider.center = enlargedCenter;
 
-            // HIT OPPONENT
-            if ((gameObject.tag == "TeamA" && other.gameObject.tag == "TeamB") || (gameObject.tag == "TeamB" && other.gameObject.tag == "TeamA"))
-                CmdOnCollisionWithOpponent();
+    //         // SET STATES
+    //         transform.parent = null;
+    //         GetComponent<Rigidbody>().useGravity = true;
 
-            // HIT GROUND OR TEAMMATE
-            else
-                CmdOnCollisionWithGround();
-        }
-    }
+    //         // HIT OPPONENT
+    //         if ((gameObject.tag == "TeamA" && other.gameObject.tag == "TeamB") || (gameObject.tag == "TeamB" && other.gameObject.tag == "TeamA"))
+    //         {
+    //             GameObject opponent = other.gameObject;
+    //             CmdOnCollisionWithOpponent(opponent);
+    //         }
 
-    [Command]
-    void CmdOnCollisionWithGround()
-    {
-        RpcOnCollisionWithGround();
-    }
+    //         // HIT GROUND OR TEAMMATE
+    //         else
+    //             CmdOnCollisionWithGround();
+    //     }
+    // }
 
-    [ClientRpc]
-    void RpcOnCollisionWithGround()
-    {
-        StartCoroutine(OnCollisionWithGround());
-    }
+    // [Command]
+    // void CmdOnCollisionWithGround()
+    // {
+    //     RpcOnCollisionWithGround();
+    // }
 
-    IEnumerator OnCollisionWithGround()
-    {
-        transform.parent = null;
-        GetComponent<Rigidbody>().useGravity = true;
+    // [ClientRpc]
+    // void RpcOnCollisionWithGround()
+    // {
+    //     StartCoroutine(OnCollisionWithGround());
+    // }
 
-        sphereCollider.center = shrunkCenter;
-        yield return new WaitForSeconds(1);
-        GetComponent<ParticleSystem>().Play();
-        yield return new WaitForSeconds(2);
-        GetComponent<Animator>().enabled = true;
-        sphereCollider.center = originalCenter;
+    // IEnumerator OnCollisionWithGround()
+    // {
+    //     // MAKE TEAMMATE FALL TO THE FLOOR FIRST, THEN PLAY SMOKE EFFECT AND MAKE HIM GET UP
+    //     sphereCollider.center = shrunkCenter;
 
-        isLetGo = false;
-    }
+    //     yield return new WaitForSeconds(1);
 
-    [Command]
-    void CmdOnCollisionWithOpponent()
-    {
-        RpcOnCollisionWithOpponent();
-    }
+    //     GetComponent<ParticleSystem>().Play();
 
-    [ClientRpc]
-    void RpcOnCollisionWithOpponent()
-    {
-        transform.parent = null;
-        GetComponent<Rigidbody>().useGravity = true;
+    //     yield return new WaitForSeconds(2);
 
-        impactSound.Play();
+    //     GetComponent<Animator>().enabled = true;
+    //     sphereCollider.center = originalCenter;
 
-        GetComponent<ParticleSystem>().Play();
-        GetComponent<Animator>().enabled = true;
-        sphereCollider.center = originalCenter;
+    //     isLetGo = false;
+    // }
 
-        isLetGo = false;
-    }
+    // [Command]
+    // void CmdOnCollisionWithOpponent(GameObject opponent)
+    // {
+    //     RpcOnCollisionWithOpponent(opponent);
+    // }
+
+    // [ClientRpc]
+    // void RpcOnCollisionWithOpponent(GameObject opponent)
+    // {
+    //     // SET OWN STATES
+    //     impactSound.Play();
+    //     GetComponent<ParticleSystem>().Play();
+    //     GetComponent<Animator>().enabled = true;
+    //     sphereCollider.center = originalCenter;
+    //     isLetGo = false;
+
+    //     // MAKE OPPONENT PERMANENT RAGDOLL
+    //     opponent.GetComponent<Animator>().enabled = false;
+    //     opponent.GetComponent<PickUpThrow>().enabled = false;
+    //     opponent.GetComponent<SphereCollider>().center = enlargedCenter;
+
+    //     // UPDATE DICTIONARY
+    // }
 }

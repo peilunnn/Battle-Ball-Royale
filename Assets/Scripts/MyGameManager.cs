@@ -18,10 +18,11 @@ public class MyGameManager : NetworkBehaviour
     [SerializeField] Text countdownText2;
     [SerializeField] Text countdownText1;
 
+    [SerializeField] AudioSource startGameSound;
+
 
     void Update()
     {
-        Debug.Log($"{availablePlayers.Count}, {temp}");
         // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 10 IE. 3 PLAYERS HAVE JOINED, START THE GAME 
         if (!gameInProgress && availablePlayers.Count < temp)
         {
@@ -46,24 +47,25 @@ public class MyGameManager : NetworkBehaviour
     {
         startGameText.enabled = true;
 
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(3);
 
         startGameText.enabled = false;
         countdownText3.enabled = true;
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         countdownText3.enabled = false;
         countdownText2.enabled = true;
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         countdownText2.enabled = false;
         countdownText1.enabled = true;
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         countdownText1.enabled = false;
+        startGameSound.Play();
     }
 
     public GameObject GetRandomPlayer()

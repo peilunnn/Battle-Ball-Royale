@@ -20,6 +20,8 @@ public class MyGameManager : NetworkBehaviour
 
     AudioSource startGameSound;
 
+    ScoreManager scoreManager;
+
     void Awake()
     {
         startGameText = GameObject.Find("StartGameText").GetComponent<Text>();
@@ -27,6 +29,7 @@ public class MyGameManager : NetworkBehaviour
         countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
         countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
         startGameSound = GameObject.Find("StartGameSound").GetComponent<AudioSource>();
+        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
     }
 
     void Update()
@@ -34,8 +37,8 @@ public class MyGameManager : NetworkBehaviour
         // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 10 IE. 3 PLAYERS HAVE JOINED, START THE GAME 
         if (!gameInProgress && availablePlayers.Count < temp)
         {
-            RpcSetGameInProgress();
             RpcSetStartGameUI();
+            RpcSetGameInProgress();
         }
     }
 

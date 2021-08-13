@@ -9,8 +9,10 @@ public class DetectCollisions : NetworkBehaviour
     SphereCollider sphereCollider;
     Vector3 originalCenter = new Vector3(0, 0.5f, -0.03f);
     Vector3 shrunkCenter = new Vector3(-0.03f, 0.9f, -0.03f);
-    Vector3 enlargedCenter = new Vector3(3.5f, 0.8f, -0.03f);
+    Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
     AudioSource impactSound;
+
+    ScoreManager scoreManager;
 
 
     // Start is called before the first frame update
@@ -20,6 +22,7 @@ public class DetectCollisions : NetworkBehaviour
         pickUpThrow = gameObject.GetComponent<PickUpThrow>();
         sphereCollider = gameObject.GetComponent<SphereCollider>();
         sphereCollider.center = originalCenter;
+        scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
     }
 
     void OnCollisionEnter(Collision other)
@@ -96,5 +99,6 @@ public class DetectCollisions : NetworkBehaviour
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 
         // UPDATE SCORE MANAGER DICTIONARY
+        scoreManager.UpdateDict(opponent);
     }
 }

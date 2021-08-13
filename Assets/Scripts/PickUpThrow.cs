@@ -106,13 +106,14 @@ public class PickUpThrow : NetworkBehaviour
         lineOfFire.SetPosition(1, transform.forward * 10 + transform.position);
     }
 
+
     [Command]
     void CmdRemoveLineOfFire()
     {
         RpcRemoveLineOfFire();
     }
 
-    [ClientRpc]
+    [TargetRpc]
     void RpcRemoveLineOfFire()
     {
         lineOfFire.enabled = false;
@@ -127,7 +128,6 @@ public class PickUpThrow : NetworkBehaviour
     [ClientRpc]
     void RpcDeactivateOwnRagdoll()
     {
-        Debug.Log("in deactivate own ragdoll");
         transform.parent = null;
         GetComponent<Rigidbody>().useGravity = true;
     }

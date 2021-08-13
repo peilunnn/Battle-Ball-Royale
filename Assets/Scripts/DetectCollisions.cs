@@ -5,32 +5,22 @@ using Mirror;
 
 public class DetectCollisions : NetworkBehaviour
 {
-    [SerializeField] PickUpThrow pickUpThrow;
+    PickUpThrow pickUpThrow;
     SphereCollider sphereCollider;
-    Vector3 originalCenter;
-    Vector3 shrunkCenter = new Vector3(-0.03f, 0.90f, -0.03f);
-    Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
+    Vector3 originalCenter = new Vector3(0, 0.5f, -0.03f);
+    Vector3 shrunkCenter = new Vector3(-0.03f, 0.9f, -0.03f);
+    Vector3 enlargedCenter = new Vector3(3.5f, 0.8f, -0.03f);
     AudioSource impactSound;
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         impactSound = GameObject.Find("Impact").GetComponent<AudioSource>();
         pickUpThrow = gameObject.GetComponent<PickUpThrow>();
         sphereCollider = gameObject.GetComponent<SphereCollider>();
-        originalCenter = sphereCollider.center;
+        sphereCollider.center = originalCenter;
     }
-
-    // // Update is called once per frame
-    // void Update()
-    // {
-    //     if (pickUpThrow.isLetGo)
-    //     {
-    //         transform.parent = null;
-    //         GetComponent<Rigidbody>().useGravity = true;
-    //     }
-    // }
 
     void OnCollisionEnter(Collision other)
     {
@@ -46,15 +36,12 @@ public class DetectCollisions : NetworkBehaviour
             if ((gameObject.tag == "TeamA" && other.gameObject.tag == "TeamB") || (gameObject.tag == "TeamB" && other.gameObject.tag == "TeamA"))
             {
                 GameObject opponent = other.gameObject;
-                Debug.Log($"hit {opponent}");
                 CmdOnCollisionWithOpponent(opponent);
             }
 
             // HIT GROUND OR TEAMMATE
             else
-            {
                 CmdOnCollisionWithGround();
-            }
         }
     }
 

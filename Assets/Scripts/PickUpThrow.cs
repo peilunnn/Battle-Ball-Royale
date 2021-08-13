@@ -11,8 +11,8 @@ public class PickUpThrow : NetworkBehaviour
     [SyncVar] [SerializeField] GameObject teammate;
     PickUpThrow teammateScript;
 
-    [SerializeField] Transform destPos;
-    [SerializeField] LineRenderer lineOfFire;
+    Transform destPos;
+    LineRenderer lineOfFire;
     float throwForce = 1000;
 
     MyGameManager gameManager;
@@ -21,6 +21,8 @@ public class PickUpThrow : NetworkBehaviour
     {
         Physics.IgnoreLayerCollision(9, 8, true);
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
+        lineOfFire = GetComponent<LineRenderer>();
+        destPos = transform.GetChild(0);
     }
 
 
@@ -49,7 +51,6 @@ public class PickUpThrow : NetworkBehaviour
             {
                 CmdRemoveLineOfFire();
                 CmdSetPutDownOrThrowStates();
-                // CmdDeactivateTeammateRagdoll();
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                     CmdThrow();
@@ -118,24 +119,6 @@ public class PickUpThrow : NetworkBehaviour
     }
 
     [Command]
-    void CmdDeactivateTeammateRagdoll()
-    {
-        RpcDeactivateTeammateRagdoll();
-    }
-
-    [ClientRpc]
-    void RpcDeactivateTeammateRagdoll()
-    {
-        if (!teammate)
-            return;
-
-        Debug.Log("in deactivate teammate ragdoll");
-
-        teammate.transform.parent = null;
-        teammate.GetComponent<Rigidbody>().useGravity = true;
-    }
-
-    [Command]
     void CmdDeactivateOwnRagdoll()
     {
         RpcDeactivateOwnRagdoll();
@@ -173,84 +156,4 @@ public class PickUpThrow : NetworkBehaviour
         toActivateTeammateRagdoll = false;
         // teammate = null;
     }
-
-    // void OnCollisionEnter(Collision other)
-    // {
-    //     if (!isLocalPlayer)
-    //         return;
-
-    //     if (isLetGo)
-    //     {
-    //         // MAKE COLLIDER BIGGER FOR EASIER TARGETING IN THE AIR
-    //         sphereCollider.center = enlargedCenter;
-
-    //         // SET STATES
-    //         transform.parent = null;
-    //         GetComponent<Rigidbody>().useGravity = true;
-
-    //         // HIT OPPONENT
-    //         if ((gameObject.tag == "TeamA" && other.gameObject.tag == "TeamB") || (gameObject.tag == "TeamB" && other.gameObject.tag == "TeamA"))
-    //         {
-    //             GameObject opponent = other.gameObject;
-    //             CmdOnCollisionWithOpponent(opponent);
-    //         }
-
-    //         // HIT GROUND OR TEAMMATE
-    //         else
-    //             CmdOnCollisionWithGround();
-    //     }
-    // }
-
-    // [Command]
-    // void CmdOnCollisionWithGround()
-    // {
-    //     RpcOnCollisionWithGround();
-    // }
-
-    // [ClientRpc]
-    // void RpcOnCollisionWithGround()
-    // {
-    //     StartCoroutine(OnCollisionWithGround());
-    // }
-
-    // IEnumerator OnCollisionWithGround()
-    // {
-    //     // MAKE TEAMMATE FALL TO THE FLOOR FIRST, THEN PLAY SMOKE EFFECT AND MAKE HIM GET UP
-    //     sphereCollider.center = shrunkCenter;
-
-    //     yield return new WaitForSeconds(1);
-
-    //     GetComponent<ParticleSystem>().Play();
-
-    //     yield return new WaitForSeconds(2);
-
-    //     GetComponent<Animator>().enabled = true;
-    //     sphereCollider.center = originalCenter;
-
-    //     isLetGo = false;
-    // }
-
-    // [Command]
-    // void CmdOnCollisionWithOpponent(GameObject opponent)
-    // {
-    //     RpcOnCollisionWithOpponent(opponent);
-    // }
-
-    // [ClientRpc]
-    // void RpcOnCollisionWithOpponent(GameObject opponent)
-    // {
-    //     // SET OWN STATES
-    //     impactSound.Play();
-    //     GetComponent<ParticleSystem>().Play();
-    //     GetComponent<Animator>().enabled = true;
-    //     sphereCollider.center = originalCenter;
-    //     isLetGo = false;
-
-    //     // MAKE OPPONENT PERMANENT RAGDOLL
-    //     opponent.GetComponent<Animator>().enabled = false;
-    //     opponent.GetComponent<PickUpThrow>().enabled = false;
-    //     opponent.GetComponent<SphereCollider>().center = enlargedCenter;
-
-    //     // UPDATE DICTIONARY
-    // }
 }

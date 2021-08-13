@@ -13,13 +13,21 @@ public class MyGameManager : NetworkBehaviour
 
     [SerializeField] int temp;
 
-    [SerializeField] Text startGameText;
-    [SerializeField] Text countdownText3;
-    [SerializeField] Text countdownText2;
-    [SerializeField] Text countdownText1;
+    Text startGameText;
+    Text countdownText3;
+    Text countdownText2;
+    Text countdownText1;
 
-    [SerializeField] AudioSource startGameSound;
+    AudioSource startGameSound;
 
+    void Awake()
+    {
+        startGameText = GameObject.Find("StartGameText").GetComponent<Text>();
+        countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
+        countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
+        countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
+        startGameSound = GameObject.Find("StartGameSound").GetComponent<AudioSource>();
+    }
 
     void Update()
     {

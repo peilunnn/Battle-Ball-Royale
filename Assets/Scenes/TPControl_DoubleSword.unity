@@ -1671,7 +1671,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b302510a816ee174eb4db18dfe0f79b3, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -2179,7 +2179,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 2cb3bba25e4420040b6e9a349870e3fd, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.4
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2930,12 +2930,7 @@ MonoBehaviour:
   - {fileID: 4635997670392463147, guid: b3aba22c001c6a14b92417702a320be5, type: 3}
   - {fileID: 4635997670392463147, guid: 6078c04721e93e44db9f9f0cf383cf84, type: 3}
   gameInProgress: 0
-  temp: 12
-  startGameText: {fileID: 1346965402}
-  countdownText3: {fileID: 1416911719}
-  countdownText2: {fileID: 1615799988}
-  countdownText1: {fileID: 2068809475}
-  startGameSound: {fileID: 151753909}
+  temp: 11
 --- !u!4 &1518911742
 Transform:
   m_ObjectHideFlags: 0

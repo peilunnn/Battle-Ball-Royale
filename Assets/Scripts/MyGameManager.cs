@@ -17,6 +17,8 @@ public class MyGameManager : NetworkBehaviour
     Text countdownText3;
     Text countdownText2;
     Text countdownText1;
+    Text teamAWonText;
+    Text teamBWonText;
 
     AudioSource startGameSound;
 
@@ -28,8 +30,16 @@ public class MyGameManager : NetworkBehaviour
         countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
         countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
         countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
+        teamAWonText = GameObject.Find("TeamAWonText").GetComponent<Text>();
+        teamBWonText = GameObject.Find("TeamBWonText").GetComponent<Text>();
+
         startGameSound = GameObject.Find("StartGameSound").GetComponent<AudioSource>();
+
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+    }
+    public GameObject GetRandomPlayer()
+    {
+        return availablePlayers[Random.Range(0, availablePlayers.Count)];
     }
 
     void Update()
@@ -40,6 +50,10 @@ public class MyGameManager : NetworkBehaviour
             RpcSetStartGameUI();
             RpcSetGameInProgress();
         }
+
+        // IF ANY OF THE TEAMS WIN, SET THEIR WINNING TEXT
+        if (gameInProgress && scoreManager.teamAWon || scoreManager.teamBWon)
+            RpcSetWinningTeamText();
     }
 
     [ClientRpc]
@@ -79,8 +93,18 @@ public class MyGameManager : NetworkBehaviour
         startGameSound.Play();
     }
 
-    public GameObject GetRandomPlayer()
+    // [Command]
+    // void CmdSetWinningTeamText()
+    // {
+    //     RpcSetWinningTeamText();
+    // }
+
+    [ClientRpc]
+    void RpcSetWinningTeamText()
     {
-        return availablePlayers[Random.Range(0, availablePlayers.Count)];
+        if (scoreManager.teamAWon)
+            teamAWonText.enabled = true;
+        else
+            teamBWonText.enabled = true;
     }
 }

@@ -41,10 +41,7 @@ public class ScoreManager : NetworkBehaviour
 
     void CheckIfTeamWon()
     {
-        if (teams["TeamA"].Count == tempPlayerCount)
-            teamBWon = true;
-
-        else if (teams["TeamB"].Count == tempPlayerCount)
-            teamAWon = true;
+        teamBWon = teams["TeamA"].Count == tempPlayerCount;
+        teamAWon = teams["TeamB"].Count == tempPlayerCount;
     }
 }

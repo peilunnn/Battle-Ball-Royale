@@ -16,8 +16,11 @@ public class MyGameManager : NetworkBehaviour
     Text countdownText3;
     Text countdownText2;
     Text countdownText1;
+    Text teamAPlayerCountText;
+    Text teamBPlayerCountText;
     Text teamAWonText;
     Text teamBWonText;
+
 
     AudioSource startGameSound;
 
@@ -29,6 +32,10 @@ public class MyGameManager : NetworkBehaviour
         countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
         countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
         countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
+
+        teamAPlayerCountText = GameObject.Find("TeamAPlayerCountText").GetComponent<Text>();
+        teamBPlayerCountText = GameObject.Find("TeamBPlayerCountText").GetComponent<Text>();
+
         teamAWonText = GameObject.Find("TeamAWonText").GetComponent<Text>();
         teamBWonText = GameObject.Find("TeamBWonText").GetComponent<Text>();
 
@@ -51,7 +58,11 @@ public class MyGameManager : NetworkBehaviour
         {
             RpcSetStartGameUI();
             RpcSetGameInProgress();
+            RpcSetPlayerCountTexts();
         }
+
+        if (teamAPlayerCountText.enabled && teamBPlayerCountText.enabled)
+            RpcUpdatePlayerCountTexts();
 
         // IF ANY OF THE TEAMS WIN, SET THEIR WINNING TEXT
         if (gameInProgress && scoreManager.teamAWon || scoreManager.teamBWon)
@@ -95,11 +106,23 @@ public class MyGameManager : NetworkBehaviour
         startGameSound.Play();
     }
 
-    // [Command]
-    // void CmdSetWinningTeamText()
-    // {
-    //     RpcSetWinningTeamText();
-    // }
+    [ClientRpc]
+    void RpcSetPlayerCountTexts()
+    {
+        teamAPlayerCountText.enabled = true;
+        teamAPlayerCountText.text = "Team A Players Remaining : 6";
+
+        teamBPlayerCountText.enabled = true;
+        teamAPlayerCountText.text = "Team B Players Remaining : 6";
+    }
+
+    [ClientRpc]
+    void RpcUpdatePlayerCountTexts()
+    {
+        teamAPlayerCountText.text = $"Team A Players Remaining: {6 - scoreManager.teams["TeamA"].Count}";
+        teamAPlayerCountText.text = $"Team B Players Remaining: {6 - scoreManager.teams["TeamB"].Count}";
+    }
+
 
     [ClientRpc]
     void RpcSetWinningTeamText()

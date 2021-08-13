@@ -128,7 +128,6 @@ public class PickUpThrow : NetworkBehaviour
     [ClientRpc]
     void RpcDeactivateOwnRagdoll()
     {
-        Debug.Log("deactivating own ragdoll");
         transform.parent = null;
         GetComponent<Rigidbody>().useGravity = true;
     }

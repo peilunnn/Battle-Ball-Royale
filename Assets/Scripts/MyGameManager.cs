@@ -6,12 +6,11 @@ using UnityEngine.UI;
 
 public class MyGameManager : NetworkBehaviour
 {
-    GameObject playerPrefab;
     public List<GameObject> availablePlayers = new List<GameObject>();
 
     [SyncVar] public bool gameInProgress = false;
 
-    [SerializeField] int temp;
+    [SerializeField] int numPlayersLeftToJoin;
 
     Text startGameText;
     Text countdownText3;
@@ -44,8 +43,11 @@ public class MyGameManager : NetworkBehaviour
 
     void Update()
     {
+        if (!isServer)
+            return;
+
         // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 10 IE. 3 PLAYERS HAVE JOINED, START THE GAME 
-        if (!gameInProgress && availablePlayers.Count < temp)
+        if (!gameInProgress && availablePlayers.Count < numPlayersLeftToJoin)
         {
             RpcSetStartGameUI();
             RpcSetGameInProgress();

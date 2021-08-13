@@ -3082,7 +3082,7 @@ MonoBehaviour:
   - {fileID: 4635997670392463147, guid: b3aba22c001c6a14b92417702a320be5, type: 3}
   - {fileID: 4635997670392463147, guid: 6078c04721e93e44db9f9f0cf383cf84, type: 3}
   gameInProgress: 0
-  temp: 9
+  numPlayersLeftToJoin: 10
 --- !u!4 &1518911742
 Transform:
   m_ObjectHideFlags: 0
@@ -3110,7 +3110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 2863014559
-  serverOnly: 1
+  serverOnly: 0
   visible: 0
   m_AssetId: 
   hasSpawned: 0
@@ -3584,7 +3584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  tempPlayerCount: 2
+  tempPlayerCount: 1
   teamAWon: 0
   teamBWon: 0
 --- !u!114 &1675756716
@@ -3600,7 +3600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 1045771706
-  serverOnly: 1
+  serverOnly: 0
   visible: 0
   m_AssetId: 
   hasSpawned: 0
@@ -3707,8 +3707,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1757768767}
   - component: {fileID: 1757768765}
-  - component: {fileID: 1757768766}
   - component: {fileID: 1757768764}
+  - component: {fileID: 1757768766}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged

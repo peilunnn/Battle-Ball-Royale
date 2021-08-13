@@ -10,8 +10,6 @@ public class MyGameManager : NetworkBehaviour
 
     [SyncVar] public bool gameInProgress = false;
 
-    [SerializeField] int numPlayersLeftToJoin;
-
     Text startGameText;
     Text countdownText3;
     Text countdownText2;
@@ -21,10 +19,11 @@ public class MyGameManager : NetworkBehaviour
     Text teamAWonText;
     Text teamBWonText;
 
-
     AudioSource startGameSound;
-
     ScoreManager scoreManager;
+
+    int numPlayersLeftToJoin = 5;
+    int tempPlayerCount = 4;
 
     void Awake()
     {
@@ -53,7 +52,7 @@ public class MyGameManager : NetworkBehaviour
         if (!isServer)
             return;
 
-        // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 10 IE. 3 PLAYERS HAVE JOINED, START THE GAME 
+        // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 5 IE. 8 PLAYERS HAVE JOINED, START THE GAME 
         if (!gameInProgress && availablePlayers.Count < numPlayersLeftToJoin)
         {
             RpcSetStartGameUI();
@@ -110,17 +109,17 @@ public class MyGameManager : NetworkBehaviour
     void RpcSetPlayerCountTexts()
     {
         teamAPlayerCountText.enabled = true;
-        teamAPlayerCountText.text = "Team A Players Remaining : 6";
+        teamAPlayerCountText.text = $"Team A Players Remaining : {tempPlayerCount}";
 
         teamBPlayerCountText.enabled = true;
-        teamAPlayerCountText.text = "Team B Players Remaining : 6";
+        teamAPlayerCountText.text = $"Team B Players Remaining : {tempPlayerCount}";
     }
 
     [ClientRpc]
     void RpcUpdatePlayerCountTexts()
     {
-        teamAPlayerCountText.text = $"Team A Players Remaining: {6 - scoreManager.teams["TeamA"].Count}";
-        teamAPlayerCountText.text = $"Team B Players Remaining: {6 - scoreManager.teams["TeamB"].Count}";
+        teamAPlayerCountText.text = $"Team A Players Remaining: {tempPlayerCount - scoreManager.teams["TeamA"].Count}";
+        teamAPlayerCountText.text = $"Team B Players Remaining: {tempPlayerCount - scoreManager.teams["TeamB"].Count}";
     }
 
 

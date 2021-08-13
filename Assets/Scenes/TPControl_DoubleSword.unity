@@ -3276,7 +3276,6 @@ MonoBehaviour:
   - {fileID: 4635997670392463147, guid: b3aba22c001c6a14b92417702a320be5, type: 3}
   - {fileID: 4635997670392463147, guid: 6078c04721e93e44db9f9f0cf383cf84, type: 3}
   gameInProgress: 0
-  numPlayersLeftToJoin: 10
 --- !u!4 &1518911742
 Transform:
   m_ObjectHideFlags: 0
@@ -3969,7 +3968,7 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 1757768765}
   networkAddress: localhost
-  maxConnections: 4
+  maxConnections: 12
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}

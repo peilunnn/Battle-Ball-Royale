@@ -28,22 +28,14 @@ namespace DM
         [Header("States")]
         public bool onGround;   //shows you are on ground or not.
         public bool sprint;     //shows you are sprinting or not.
-        [HideInInspector]
-        public bool jump;       //stores whether you jump or not
-        [HideInInspector]
-        // public bool normalAttack;   //stores whether you do normal attack or not
-        // [HideInInspector]
-        // public bool comboAttack;       //stores whether you combo or not
+        [HideInInspector] public bool jump;       //stores whether you jump or not
         public bool canMove;    //shows you can move or not
-        // [HideInInspector]
-        public bool roll;       //stores whether you roll or not
-
+        [HideInInspector] public bool roll;       //stores whether you roll or not
 
         float fixedDelta;        //stores Time.fixedDeltaTime
         float delta;
         Animator anim;      //for caching Animator component
-        [HideInInspector]
-        public Rigidbody rigid;     //for caching Rigidbody component
+        [HideInInspector] public Rigidbody rigid;     //for caching Rigidbody component
         CameraManager camManager;   //for caching CameraManager script
         [SerializeField] AudioSource footstep;
 
@@ -51,6 +43,7 @@ namespace DM
         {
             footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
         }
+
         void Start() // Initiallizing camera, animator, rigidboy
         {
             SetupAnimator();
@@ -68,13 +61,9 @@ namespace DM
             {
                 anim = GetComponentInChildren<Animator>();//Find animator component in the children hierarchy.
                 if (anim == null)
-                {
                     Debug.Log("No model");
-                }
                 else
-                {
                     activeModel = anim.gameObject; //save this gameobject as active model.
-                }
             }
 
             if (anim == null)
@@ -113,8 +102,6 @@ namespace DM
         [ClientRpc]
         void RpcPlayFootstepSound()
         {
-            if (!footstep)
-                Debug.Log("no footstep");
             if (footstep && !(footstep.isPlaying))
                 footstep.Play();
         }
@@ -125,8 +112,6 @@ namespace DM
             horizontal = Input.GetAxis("Horizontal");    //for getting horizontal input.
             sprint = Input.GetButton("SprintInput");     //for getting sprint input.
             jump = Input.GetButtonDown("Jump");      //for getting jump input.
-            // normalAttack = Input.GetButtonDown("Fire1"); //for getting normal attack input.
-            // comboAttack = Input.GetButtonDown("Fire2");    //for getting combo attack input.
             roll = Input.GetButtonDown("Fire3");     //for getting roll input.
         }
 
@@ -144,24 +129,13 @@ namespace DM
                 }
             }
 
-            // if (comboAttack)     //I clicked for combo attack. right mouse button or X key in the joypad.
-            // {
-            //     if (onGround)    //only when you are on ground.
-            //     {
-            //         anim.SetTrigger("combo");   //Set trigger named "combo" on
-
-            //     }
-            // }
-
             if (roll && onGround)    //I clicked for roll. middle mouse button or Y key in the joypad.
                 GetComponent<NetworkAnimator>().SetTrigger("roll");
 
             float targetSpeed = moveSpeed;  //set run speed as target speed.
 
             if (sprint)
-            {
                 targetSpeed = sprintSpeed;    //set sprint speed as target speed.            
-            }
 
             //mixing camera rotation value to the character moving value.
             Vector3 v = vertical * camManager.transform.forward;
@@ -176,24 +150,6 @@ namespace DM
             //This is for limiting values from 0 to 1.
             float m = Mathf.Abs(horizontal) + Mathf.Abs(vertical);
             moveAmount = Mathf.Clamp01(m);
-
-            // if (normalAttack && canMove) // I clicked for normal attack when I can move around.
-            // {
-            //     string targetAnim;
-
-            //     //chosing random attack from array.
-            //     int r = Random.Range(0, randomAttacks.Length);
-            //     targetAnim = randomAttacks[r];
-
-            //     anim.CrossFade(targetAnim, 0.1f); //play the target animation in 0.1 second.                 
-
-            //     if (!onGround)
-            //     {
-            //         anim.CrossFade("JumpAttack", 0.1f); // When you are air born, you do this jump attack.
-            //     }
-
-            //     normalAttack = false;
-            // } 
         }
 
         void FixedTick(float d)
@@ -206,9 +162,7 @@ namespace DM
             if (onGround)
             {
                 if (canMove)
-                {
                     rigid.velocity = moveDir;  //This controls the character movement.                  
-                }
             }
 
             //This can control character's rotation.
@@ -231,9 +185,7 @@ namespace DM
         {
             anim.SetBool("sprint", sprint);   //syncing sprint bool value to animator's "Sprint" value.           
             if (moveAmount == 0)
-            {
                 anim.SetBool("sprint", false);
-            }
 
             anim.SetFloat("vertical", moveAmount, 0.2f, fixedDelta); //syncing moveAmount value to animator's "vertical" value.
         }
@@ -258,7 +210,6 @@ namespace DM
                 anim.SetBool("onGround", false);
             }
         }
-
     }
 }
 

@@ -10,10 +10,8 @@ namespace DM
 
         public Transform target;    //stores the target for camera.
 
-        [HideInInspector]
-        public Transform pivot;     //pivot for camera's rotation.
-        [HideInInspector]
-        public Transform camTrans;  //stores camera's root transform.
+        [HideInInspector] public Transform pivot;     //pivot for camera's rotation.
+        [HideInInspector] public Transform camTrans;  //stores camera's root transform.
 
         float turnSmoothing = 0.1f;     //defines how smooth this camera moves.
         public float minAngle = -35f;   //minimum vertical angle.
@@ -28,10 +26,9 @@ namespace DM
 
         Transform mainCamera;
         RaycastHit[] hits = new RaycastHit[0];
-        Transform wall;
-        float zoomSpeed = 2f;
         float camToPlayerDistance;
         float camToWallDistance;
+        float offset = 10f;
 
         public void Init(Transform t)   //Initiallize camera settings.
         {
@@ -103,19 +100,19 @@ namespace DM
 
         void OnViewObstructed()
         {
-            // // IF WALL IS NO LONGER BLOCKING, REENABLE MESH RENDERER
+            // IF WALL(S) NO LONGER BLOCKING, RE-ENABLE MESH RENDERER
             foreach (RaycastHit hit in hits)
             {
-                if (hit.collider.tag == "Wall")
+                if (hit.collider && hit.collider.tag == "Wall")
                     hit.transform.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
 
             camToPlayerDistance = Vector3.Distance(mainCamera.position, target.position);
 
-            Vector3 dir = target.position - mainCamera.position;
-            Ray ray = new Ray(mainCamera.position, dir);
+            Vector3 camToPlayerDirection = target.position - mainCamera.position;
+            Ray ray = new Ray(mainCamera.position, camToPlayerDirection);
 
-            hits = Physics.RaycastAll(mainCamera.position, dir, camToPlayerDistance);
+            hits = Physics.RaycastAll(mainCamera.position, camToPlayerDirection, camToPlayerDistance);
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.tag != "Wall")
@@ -123,12 +120,9 @@ namespace DM
 
                 camToWallDistance = Vector3.Distance(mainCamera.position, hit.transform.position);
 
-                if (camToWallDistance >= camToPlayerDistance)
-                {
-                    // KEEP SHADOW BEFORE DISABLING MESH RENDERER TO GIVE ILLUSION THAT WALL IS STILL THERE
+                // KEEP SHADOW BEFORE DISABLING MESH RENDERER TO GIVE ILLUSION THAT WALL IS STILL THERE
+                if (camToWallDistance >= camToPlayerDistance - offset)
                     hit.transform.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-                    transform.Translate(Vector3.back * zoomSpeed * Time.deltaTime);
-                }
             }
         }
     }

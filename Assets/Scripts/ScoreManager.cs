@@ -34,9 +34,6 @@ public class ScoreManager : NetworkBehaviour
     public void UpdateDict(GameObject player)
     {
         teams[$"{player.tag}"].Add(player);
-
-        // foreach (GameObject deadPlayer in teams[$"{player.tag}"])
-        //     Debug.Log(deadPlayer);
     }
 
     void CheckIfTeamWon()

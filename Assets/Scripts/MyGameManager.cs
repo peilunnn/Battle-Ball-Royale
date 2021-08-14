@@ -22,8 +22,8 @@ public class MyGameManager : NetworkBehaviour
     AudioSource startGameSound;
     ScoreManager scoreManager;
 
-    int numPlayersLeftToJoin = 5;
-    int tempPlayerCount = 4;
+    int numPlayersLeftToJoin = 9;
+    int tempPlayerCount = 2;
 
     void Awake()
     {
@@ -52,7 +52,7 @@ public class MyGameManager : NetworkBehaviour
         if (!isServer)
             return;
 
-        // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 5 IE. 8 PLAYERS HAVE JOINED, START THE GAME 
+        // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 9 IE. 4 PLAYERS HAVE JOINED, START THE GAME 
         if (!gameInProgress && availablePlayers.Count < numPlayersLeftToJoin)
         {
             RpcSetStartGameUI();

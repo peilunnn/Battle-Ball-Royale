@@ -1,0 +1,280 @@
+fileFormatVersion: 2
+guid: 2b96a425dbfb7a0408555753880515bd
+timeCreated: 1487578187
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: abdomen
+    100002: //RootNode
+    100004: Cat
+    100006: Cat 1
+    100008: chest
+    100010: head
+    100012: hip
+    100014: lEar
+    100016: leftEye
+    100018: lFoot
+    100020: lForeArm
+    100022: lHand
+    100024: lLeg
+    100026: lShin
+    100028: lShldr
+    100030: lThigh
+    100032: lWhisker
+    100034: lWrist
+    100036: neck
+    100038: rEar
+    100040: rFoot
+    100042: rForeArm
+    100044: rHand
+    100046: rightEye
+    100048: rLeg
+    100050: rShin
+    100052: rShldr
+    100054: rThigh
+    100056: rWhisker
+    100058: rWrist
+    100060: tail1
+    100062: tail10
+    100064: tail11
+    100066: tail12
+    100068: tail2
+    100070: tail3
+    100072: tail4
+    100074: tail5
+    100076: tail6
+    100078: tail7
+    100080: tail8
+    100082: tail9
+    100084: waist
+    400000: abdomen
+    400002: //RootNode
+    400004: Cat
+    400006: Cat 1
+    400008: chest
+    400010: head
+    400012: hip
+    400014: lEar
+    400016: leftEye
+    400018: lFoot
+    400020: lForeArm
+    400022: lHand
+    400024: lLeg
+    400026: lShin
+    400028: lShldr
+    400030: lThigh
+    400032: lWhisker
+    400034: lWrist
+    400036: neck
+    400038: rEar
+    400040: rFoot
+    400042: rForeArm
+    400044: rHand
+    400046: rightEye
+    400048: rLeg
+    400050: rShin
+    400052: rShldr
+    400054: rThigh
+    400056: rWhisker
+    400058: rWrist
+    400060: tail1
+    400062: tail10
+    400064: tail11
+    400066: tail12
+    400068: tail2
+    400070: tail3
+    400072: tail4
+    400074: tail5
+    400076: tail6
+    400078: tail7
+    400080: tail8
+    400082: tail9
+    400084: waist
+    4300000: Cat
+    7400000: Animation
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Cat 1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Animation
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 153
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Cat
+        weight: 1
+      - path: Cat/Cat 1
+        weight: 1
+      - path: Cat/hip
+        weight: 1
+      - path: Cat/hip/lThigh
+        weight: 1
+      - path: Cat/hip/lThigh/lLeg
+        weight: 1
+      - path: Cat/hip/lThigh/lLeg/lShin
+        weight: 1
+      - path: Cat/hip/lThigh/lLeg/lShin/lFoot
+        weight: 1
+      - path: Cat/hip/rThigh
+        weight: 1
+      - path: Cat/hip/rThigh/rLeg
+        weight: 1
+      - path: Cat/hip/rThigh/rLeg/rShin
+        weight: 1
+      - path: Cat/hip/rThigh/rLeg/rShin/rFoot
+        weight: 1
+      - path: Cat/hip/tail1
+        weight: 1
+      - path: Cat/hip/tail1/tail2
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6/tail7
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6/tail7/tail8
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6/tail7/tail8/tail9
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6/tail7/tail8/tail9/tail10
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6/tail7/tail8/tail9/tail10/tail11
+        weight: 1
+      - path: Cat/hip/tail1/tail2/tail3/tail4/tail5/tail6/tail7/tail8/tail9/tail10/tail11/tail12
+        weight: 1
+      - path: Cat/hip/waist
+        weight: 1
+      - path: Cat/hip/waist/abdomen
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/lShldr
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/lShldr/lForeArm
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/lShldr/lForeArm/lWrist
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/lShldr/lForeArm/lWrist/lHand
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head/lEar
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head/leftEye
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head/lWhisker
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head/rEar
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head/rightEye
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/neck/head/rWhisker
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/rShldr
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/rShldr/rForeArm
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/rShldr/rForeArm/rWrist
+        weight: 1
+      - path: Cat/hip/waist/abdomen/chest/rShldr/rForeArm/rWrist/rHand
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

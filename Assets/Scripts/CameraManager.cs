@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DM
 {
@@ -28,11 +26,19 @@ namespace DM
         public float lookAngle;
         public float tiltAngle;
 
+        Transform mainCamera;
+        Transform wall;
+        float zoomSpeed = 2f;
+        float camToPlayerDistance;
+        float camToWallDistance;
+
         public void Init(Transform t)   //Initiallize camera settings.
         {
             target = t;
             camTrans = Camera.main.transform;
             pivot = camTrans.parent;
+
+            mainCamera = GameObject.Find("Main Camera").transform;
         }
 
         public void FixedTick(float d)   //Getting camera inputs and updates camera's stats.
@@ -55,6 +61,7 @@ namespace DM
 
             FollowTarget(d);
             HandleRotations(d, v, h, targetSpeed);
+            OnViewObstructed();
         }
 
         void FollowTarget(float d)  //defines how camera follows the target.
@@ -93,6 +100,36 @@ namespace DM
             singleton = this;
         }
 
+        void OnViewObstructed()
+        {
+            // IF WALL IS NO LONGER BLOCKING, REENABLE MESH RENDERER
+            if (wall)
+                wall.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+
+            camToPlayerDistance = Vector3.Distance(mainCamera.position, target.position);
+
+            Ray ray = new Ray(mainCamera.position, target.position - mainCamera.position);
+
+            // SEND RAY OUT FROM CAMERA AND CHECK IF RAY HITS WALL
+            if (Physics.Raycast(ray, out RaycastHit hit, camToPlayerDistance))
+            {
+                if (hit.collider.tag != "Wall")
+                    return;
+
+                Debug.Log(hit.transform.gameObject.name);
+
+                wall = hit.transform;
+                camToWallDistance = Vector3.Distance(mainCamera.position, wall.position);
+
+                if (camToWallDistance >= camToPlayerDistance)
+                {
+                    // KEEP SHADOW BEFORE DISABLING MESH RENDERER TO GIVE ILLUSION THAT WALL IS STILL THERE
+                    wall.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+
+                    transform.Translate(Vector3.back * zoomSpeed * Time.deltaTime);
+                }
+            }
+        }
     }
 }
 

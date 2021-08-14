@@ -8,6 +8,8 @@ TagManager:
   - Ragdoll
   - TeamA
   - TeamB
+  - Fire
+  - Wall
   layers:
   - Default
   - TransparentFX

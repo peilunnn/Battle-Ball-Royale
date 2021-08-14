@@ -27,6 +27,7 @@ namespace DM
         public float tiltAngle;
 
         Transform mainCamera;
+        RaycastHit[] hits = new RaycastHit[0];
         Transform wall;
         float zoomSpeed = 2f;
         float camToPlayerDistance;
@@ -102,30 +103,30 @@ namespace DM
 
         void OnViewObstructed()
         {
-            // IF WALL IS NO LONGER BLOCKING, REENABLE MESH RENDERER
-            if (wall)
-                wall.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            // // IF WALL IS NO LONGER BLOCKING, REENABLE MESH RENDERER
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider.tag == "Wall")
+                    hit.transform.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            }
 
             camToPlayerDistance = Vector3.Distance(mainCamera.position, target.position);
 
-            Ray ray = new Ray(mainCamera.position, target.position - mainCamera.position);
+            Vector3 dir = target.position - mainCamera.position;
+            Ray ray = new Ray(mainCamera.position, dir);
 
-            // SEND RAY OUT FROM CAMERA AND CHECK IF RAY HITS WALL
-            if (Physics.Raycast(ray, out RaycastHit hit, camToPlayerDistance))
+            hits = Physics.RaycastAll(mainCamera.position, dir, camToPlayerDistance);
+            foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.tag != "Wall")
                     return;
 
-                Debug.Log(hit.transform.gameObject.name);
-
-                wall = hit.transform;
-                camToWallDistance = Vector3.Distance(mainCamera.position, wall.position);
+                camToWallDistance = Vector3.Distance(mainCamera.position, hit.transform.position);
 
                 if (camToWallDistance >= camToPlayerDistance)
                 {
                     // KEEP SHADOW BEFORE DISABLING MESH RENDERER TO GIVE ILLUSION THAT WALL IS STILL THERE
-                    wall.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-
+                    hit.transform.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
                     transform.Translate(Vector3.back * zoomSpeed * Time.deltaTime);
                 }
             }

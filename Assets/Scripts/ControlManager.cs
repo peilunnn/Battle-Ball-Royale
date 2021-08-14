@@ -35,7 +35,7 @@ namespace DM
         // [HideInInspector]
         // public bool comboAttack;       //stores whether you combo or not
         public bool canMove;    //shows you can move or not
-        [HideInInspector]
+        // [HideInInspector]
         public bool roll;       //stores whether you roll or not
 
 
@@ -99,10 +99,9 @@ namespace DM
 
             GetInput();     //getting control input from keyboard or joypad
             UpdateStates();   //Updating anything related to character's actions.
-            if (onGround && sprint)
-            {
+
+            if (onGround && !roll && sprint)
                 CmdPlayFootstepSound();
-            }
         }
 
         [Command]

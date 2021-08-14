@@ -1044,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4635997670392463147}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.533155, y: 0.00000011920929, z: 8.249107}
+  m_LocalPosition: {x: 99.21087, y: 0.25944728, z: 55.372765}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4635997670356395815}
@@ -1214,7 +1214,7 @@ MonoBehaviour:
   moveSpeed: 6
   sprintSpeed: 9
   rotateSpeed: 6
-  jumpForce: 700
+  jumpForce: 600
   onGround: 0
   sprint: 0
   jump: 0
@@ -1281,9 +1281,6 @@ MonoBehaviour:
   toActivateTeammateRagdoll: 0
   isLetGo: 0
   teammate: {fileID: 0}
-  destPos: {fileID: 4635997670356395815}
-  lineOfFire: {fileID: 3958906276471305627}
-  gameManager: {fileID: 0}
 --- !u!95 &7899800692230665678
 Animator:
   serializedVersion: 3
@@ -6067,8 +6064,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  pickUpThrow: {fileID: 4091136897128886373}
-  impactSound: {fileID: 0}
 --- !u!1001 &4635997671817713529
 PrefabInstance:
   m_ObjectHideFlags: 0

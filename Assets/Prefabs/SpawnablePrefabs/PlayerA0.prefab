@@ -1044,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4635997670392463147}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.53, y: 0.00000011920929, z: 6.08}
+  m_LocalPosition: {x: 95.86377, y: 0.25944728, z: 63.142673}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4635997670356395815}
@@ -1214,7 +1214,7 @@ MonoBehaviour:
   moveSpeed: 6
   sprintSpeed: 9
   rotateSpeed: 6
-  jumpForce: 700
+  jumpForce: 600
   onGround: 0
   sprint: 0
   jump: 0

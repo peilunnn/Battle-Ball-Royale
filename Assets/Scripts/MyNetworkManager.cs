@@ -17,12 +17,12 @@ public class MyNetworkManager : NetworkManager
         gameManager.availablePlayers.Remove(playerPrefab);
     }
 
-    public override void OnClientDisconnect(NetworkConnection conn)
+    public override void OnServerDisconnect(NetworkConnection conn)
     {
         // FOR DC AT "LOBBY" BEFORE GAME SESSION STARTS: ADD BACK PREFAB TO LIST SO THAT MORE PLAYERS CAN JOIN
         if (!gameManager.gameInProgress)
             gameManager.availablePlayers.Add(playerPrefab);
 
-        base.OnClientDisconnect(conn);
+        base.OnServerDisconnect(conn);
     }
 }

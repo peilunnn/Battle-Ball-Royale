@@ -23,7 +23,7 @@ public class MyGameManager : NetworkBehaviour
     ScoreManager scoreManager;
 
     int numPlayersLeftToJoin = 9;
-    int tempPlayerCount = 2;
+    public int tempPlayerCount = 2;
 
     void Awake()
     {

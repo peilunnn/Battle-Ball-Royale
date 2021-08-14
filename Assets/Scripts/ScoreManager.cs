@@ -7,8 +7,6 @@ public class ScoreManager : NetworkBehaviour
 {
     public Dictionary<string, List<GameObject>> teams = new Dictionary<string, List<GameObject>>();
 
-    [SerializeField] int tempPlayerCount;
-
     MyGameManager gameManager;
 
     [SyncVar] public bool teamAWon = false;
@@ -38,7 +36,7 @@ public class ScoreManager : NetworkBehaviour
 
     void CheckIfTeamWon()
     {
-        teamBWon = teams["TeamA"].Count == tempPlayerCount;
-        teamAWon = teams["TeamB"].Count == tempPlayerCount;
+        teamBWon = teams["TeamA"].Count == gameManager.tempPlayerCount;
+        teamAWon = teams["TeamB"].Count == gameManager.tempPlayerCount;
     }
 }

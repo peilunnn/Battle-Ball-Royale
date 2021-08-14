@@ -12,6 +12,9 @@ public class DetectCollisions : NetworkBehaviour
     Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
     AudioSource impactSound;
 
+    ParticleSystem smoke;
+    Animator animator;
+
     ScoreManager scoreManager;
 
 
@@ -23,6 +26,8 @@ public class DetectCollisions : NetworkBehaviour
         sphereCollider = gameObject.GetComponent<SphereCollider>();
         sphereCollider.center = originalCenter;
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
+        smoke = GetComponent<ParticleSystem>();
+        animator = GetComponent<Animator>();
     }
 
     void OnCollisionEnter(Collision other)
@@ -40,6 +45,7 @@ public class DetectCollisions : NetworkBehaviour
             {
                 GameObject opponent = other.gameObject;
                 CmdOnCollisionWithOpponent(opponent);
+                pickUpThrow.CmdDeactivateOwnRagdoll();
             }
 
             // HIT GROUND OR TEAMMATE
@@ -67,11 +73,11 @@ public class DetectCollisions : NetworkBehaviour
 
         yield return new WaitForSeconds(1);
 
-        GetComponent<ParticleSystem>().Play();
+        smoke.Play();
 
         yield return new WaitForSeconds(2);
 
-        GetComponent<Animator>().enabled = true;
+        animator.enabled = true;
         sphereCollider.center = originalCenter;
 
         pickUpThrow.isLetGo = false;
@@ -88,8 +94,8 @@ public class DetectCollisions : NetworkBehaviour
     {
         // SET OWN STATES
         impactSound.Play();
-        GetComponent<ParticleSystem>().Play();
-        GetComponent<Animator>().enabled = true;
+        smoke.Play();
+        animator.enabled = true;
         sphereCollider.center = originalCenter;
         pickUpThrow.isLetGo = false;
 

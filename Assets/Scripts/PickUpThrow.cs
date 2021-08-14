@@ -14,6 +14,7 @@ public class PickUpThrow : NetworkBehaviour
     Transform destPos;
     LineRenderer lineOfFire;
     float throwForce = 1000;
+    Rigidbody rb;
 
     MyGameManager gameManager;
 
@@ -23,6 +24,7 @@ public class PickUpThrow : NetworkBehaviour
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
         lineOfFire = GetComponent<LineRenderer>();
         destPos = transform.GetChild(0);
+        rb = GetComponent<Rigidbody>();
     }
 
 
@@ -120,7 +122,7 @@ public class PickUpThrow : NetworkBehaviour
     }
 
     [Command]
-    void CmdDeactivateOwnRagdoll()
+    public void CmdDeactivateOwnRagdoll()
     {
         RpcDeactivateOwnRagdoll();
     }
@@ -129,7 +131,7 @@ public class PickUpThrow : NetworkBehaviour
     void RpcDeactivateOwnRagdoll()
     {
         transform.parent = null;
-        GetComponent<Rigidbody>().useGravity = true;
+        rb.useGravity = true;
     }
 
     [Command]

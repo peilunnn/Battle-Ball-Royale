@@ -27,7 +27,6 @@ namespace DM
         Transform mainCamera;
         RaycastHit[] hits = new RaycastHit[0];
         float camToPlayerDistance;
-        Vector3 camToPlayerDirection;
         float camToWallDistance;
         float offset = 10f;
 
@@ -60,8 +59,7 @@ namespace DM
 
             FollowTarget(d);
             HandleRotations(d, v, h, targetSpeed);
-            ReenableWall();
-            DisableWall();
+            OnViewObstructed();
         }
 
         void FollowTarget(float d)  //defines how camera follows the target.
@@ -100,14 +98,21 @@ namespace DM
             singleton = this;
         }
 
-        void DisableWall()
+        void OnViewObstructed()
         {
+            // IF WALL(S) NO LONGER BLOCKING, RE-ENABLE MESH RENDERER
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider && hit.collider.tag == "Wall")
+                    hit.transform.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            }
+
             camToPlayerDistance = Vector3.Distance(mainCamera.position, target.position);
-            camToPlayerDirection = target.position - mainCamera.position;
 
-            // SEND RAY OUT AND COLLECT ALL HITS
+            Vector3 camToPlayerDirection = target.position - mainCamera.position;
+            Ray ray = new Ray(mainCamera.position, camToPlayerDirection);
+
             hits = Physics.RaycastAll(mainCamera.position, camToPlayerDirection, camToPlayerDistance);
-
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.tag != "Wall")
@@ -118,16 +123,6 @@ namespace DM
                 // KEEP SHADOW BEFORE DISABLING MESH RENDERER TO GIVE ILLUSION THAT WALL IS STILL THERE
                 if (camToWallDistance >= camToPlayerDistance - offset)
                     hit.transform.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-            }
-        }
-
-        void ReenableWall()
-        {
-            // IF WALL(S) NO LONGER BLOCKING, RE-ENABLE MESH RENDERER
-            foreach (RaycastHit hit in hits)
-            {
-                if (hit.collider && hit.collider.tag == "Wall")
-                    hit.transform.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
         }
     }

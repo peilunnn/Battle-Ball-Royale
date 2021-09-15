@@ -22,7 +22,6 @@ public class MyGameManager : NetworkBehaviour
     AudioSource startGameSound;
     ScoreManager scoreManager;
 
-    int numPlayersLeftToJoin = 9;
     public int tempPlayerCount = 2;
 
     void Awake()
@@ -52,13 +51,9 @@ public class MyGameManager : NetworkBehaviour
         if (!isServer)
             return;
 
-        // IF NO. OF PLAYERS LEFT TO JOIN IS LESS THAN 9 IE. 4 PLAYERS HAVE JOINED, START THE GAME 
-        if (!gameInProgress && availablePlayers.Count < numPlayersLeftToJoin)
-        {
-            RpcSetStartGameUI();
-            RpcSetGameInProgress();
-            RpcSetPlayerCountTexts();
-        }
+        // IF 3 PLAYERS HAVE JOINED, START THE GAME 
+        if (!gameInProgress && NetworkServer.connections.Count > 2)
+            StartCoroutine(StartGame());
 
         if (teamAPlayerCountText.enabled && teamBPlayerCountText.enabled)
             RpcUpdatePlayerCountTexts();
@@ -67,6 +62,17 @@ public class MyGameManager : NetworkBehaviour
         if (gameInProgress && scoreManager.teamAWon || scoreManager.teamBWon)
             RpcSetWinningTeamText();
     }
+
+    IEnumerator StartGame()
+    {
+        yield return new WaitForSeconds(1);
+
+        RpcSetStartGameUI();
+        RpcSetGameInProgress();
+        RpcSetPlayerCountTexts();
+    }
+
+
 
     [ClientRpc]
     void RpcSetGameInProgress()
@@ -109,17 +115,17 @@ public class MyGameManager : NetworkBehaviour
     void RpcSetPlayerCountTexts()
     {
         teamAPlayerCountText.enabled = true;
-        teamAPlayerCountText.text = $"Team A Players Remaining : {tempPlayerCount}";
+        teamBPlayerCountText.text = $"Team A Players Remaining : {tempPlayerCount}";
 
-        teamBPlayerCountText.enabled = true;
-        teamAPlayerCountText.text = $"Team B Players Remaining : {tempPlayerCount}";
+        teamAPlayerCountText.enabled = true;
+        teamBPlayerCountText.text = $"Team B Players Remaining : {tempPlayerCount}";
     }
 
     [ClientRpc]
     void RpcUpdatePlayerCountTexts()
     {
         teamAPlayerCountText.text = $"Team A Players Remaining: {tempPlayerCount - scoreManager.teams["TeamA"].Count}";
-        teamAPlayerCountText.text = $"Team B Players Remaining: {tempPlayerCount - scoreManager.teams["TeamB"].Count}";
+        teamBPlayerCountText.text = $"Team B Players Remaining: {tempPlayerCount - scoreManager.teams["TeamB"].Count}";
     }
 
 

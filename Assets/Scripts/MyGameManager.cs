@@ -24,7 +24,7 @@ public class MyGameManager : NetworkBehaviour
 
     public int tempPlayerCount = 2;
 
-    void Awake()
+    void Start()
     {
         startGameText = GameObject.Find("StartGameText").GetComponent<Text>();
         countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
@@ -41,6 +41,7 @@ public class MyGameManager : NetworkBehaviour
 
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
     }
+
     public GameObject GetRandomPlayer()
     {
         return availablePlayers[Random.Range(0, availablePlayers.Count)];
@@ -51,8 +52,8 @@ public class MyGameManager : NetworkBehaviour
         if (!isServer)
             return;
 
-        // IF 3 PLAYERS HAVE JOINED, START THE GAME 
-        if (!gameInProgress && NetworkServer.connections.Count > 2)
+        // IF 4 PLAYERS HAVE JOINED, START THE GAME 
+        if (!gameInProgress && NetworkServer.connections.Count > 3)
             StartCoroutine(StartGame());
 
         if (teamAPlayerCountText.enabled && teamBPlayerCountText.enabled)

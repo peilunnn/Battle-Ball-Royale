@@ -96,12 +96,17 @@ public class DetectCollisions : NetworkBehaviour
         impactSound.Play();
         smoke.Play();
         animator.enabled = true;
+
+        if (pickUpThrow.isDead)
+            animator.enabled = false;
+
         sphereCollider.center = originalCenter;
         pickUpThrow.isLetGo = false;
 
         // MAKE OPPONENT PERMANENT RAGDOLL
+        opponent.GetComponent<PickUpThrow>().isDead = true;
         opponent.GetComponent<Animator>().enabled = false;
-        opponent.GetComponent<PickUpThrow>().enabled = false;
+        // opponent.GetComponent<PickUpThrow>().enabled = false;
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 
         // UPDATE SCORE MANAGER DICTIONARY

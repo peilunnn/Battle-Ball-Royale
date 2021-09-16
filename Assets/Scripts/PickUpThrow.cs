@@ -7,6 +7,7 @@ public class PickUpThrow : NetworkBehaviour
     [SyncVar] [SerializeField] bool isPickedUp = false;
     [SyncVar] [SerializeField] bool toActivateTeammateRagdoll = false;
     [SyncVar] public bool isLetGo = false;
+    [SyncVar] public bool isDead = false;
 
     [SyncVar] [SerializeField] GameObject teammate;
     PickUpThrow teammateScript;
@@ -34,6 +35,12 @@ public class PickUpThrow : NetworkBehaviour
         if (!gameManager.gameInProgress || !isLocalPlayer)
             return;
 
+        if (isLetGo)
+            CmdDeactivateOwnRagdoll();
+
+        if (isDead)
+            return;
+
         // IF PLAYER PRESSES E, SET STATES
         if (!isPicker && !isPickedUp && Input.GetKeyDown(KeyCode.E))
             CmdSetPickUpStates();
@@ -58,9 +65,6 @@ public class PickUpThrow : NetworkBehaviour
                     CmdThrow();
             }
         }
-
-        if (isLetGo)
-            CmdDeactivateOwnRagdoll();
     }
 
     [Command]

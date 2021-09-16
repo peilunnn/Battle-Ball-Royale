@@ -31,7 +31,8 @@ public class ScoreManager : NetworkBehaviour
 
     public void UpdateDict(GameObject player)
     {
-        teams[$"{player.tag}"].Add(player);
+        if (!(teams[$"{player.tag}"].Contains(player)))
+            teams[$"{player.tag}"].Add(player);
     }
 
     void CheckIfTeamWon()

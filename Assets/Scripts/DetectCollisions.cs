@@ -77,7 +77,13 @@ public class DetectCollisions : NetworkBehaviour
 
         yield return new WaitForSeconds(2);
 
+        Debug.Log(pickUpThrow.isDead);
+
         animator.enabled = true;
+
+        if (pickUpThrow.isDead)
+            animator.enabled = false;
+
         sphereCollider.center = originalCenter;
 
         pickUpThrow.isLetGo = false;

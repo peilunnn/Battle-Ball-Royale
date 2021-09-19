@@ -103,7 +103,7 @@ namespace DM
             // IF WALL(S) NO LONGER BLOCKING, RE-ENABLE MESH RENDERER
             foreach (RaycastHit hit in hits)
             {
-                if (hit.collider && hit.collider.tag == "Wall")
+                if (hit.collider && (hit.collider.tag == "Wall" || hit.collider.tag == "Ceiling"))
                     hit.transform.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
 
@@ -115,7 +115,7 @@ namespace DM
             hits = Physics.RaycastAll(mainCamera.position, camToPlayerDirection, camToPlayerDistance);
             foreach (RaycastHit hit in hits)
             {
-                if (hit.collider.tag != "Wall")
+                if ((hit.collider.tag != "Wall") && hit.collider.tag != "Ceiling")
                     return;
 
                 camToWallDistance = Vector3.Distance(mainCamera.position, hit.transform.position);

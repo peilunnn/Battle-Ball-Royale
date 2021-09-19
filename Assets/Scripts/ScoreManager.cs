@@ -9,9 +9,6 @@ public class ScoreManager : NetworkBehaviour
 
     MyGameManager gameManager;
 
-    [SyncVar] public bool teamAWon = false;
-    [SyncVar] public bool teamBWon = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,24 +17,9 @@ public class ScoreManager : NetworkBehaviour
         teams.Add("TeamB", new List<GameObject>());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!gameManager.gameInProgress)
-            return;
-
-        CheckIfTeamWon();
-    }
-
     public void UpdateDict(GameObject player)
     {
         if (!(teams[$"{player.tag}"].Contains(player)))
             teams[$"{player.tag}"].Add(player);
-    }
-
-    void CheckIfTeamWon()
-    {
-        teamBWon = teams["TeamA"].Count == gameManager.tempPlayerCount;
-        teamAWon = teams["TeamB"].Count == gameManager.tempPlayerCount;
     }
 }

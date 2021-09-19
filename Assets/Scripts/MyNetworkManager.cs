@@ -4,16 +4,13 @@ using Mirror;
 public class MyNetworkManager : NetworkManager
 {
     [SerializeField] MyGameManager gameManager;
+    [SerializeField] ScoreManager scoreManager;
 
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
-        // GET ALR RANDOMIZED PLAYER PREFAB FROM GAME MANAGER
         playerPrefab = gameManager.GetRandomPlayer();
-
-        // ADD PLAYER FOR CONNECTION 
         base.OnServerAddPlayer(conn);
 
-        // REMOVE THAT PREFAB FROM THE LIST SO IT WONT BE AVAILABLE TO OTHER CLIENTS JOINING
         gameManager.availablePlayers.Remove(playerPrefab);
     }
 

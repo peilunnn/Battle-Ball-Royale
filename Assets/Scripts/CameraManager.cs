@@ -100,7 +100,7 @@ namespace DM
 
         void OnViewObstructed()
         {
-            // IF WALL(S) NO LONGER BLOCKING, RE-ENABLE MESH RENDERER
+            // if wall and/or ceiling not blocking anymore, re-enable them
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider && (hit.collider.tag == "Wall" || hit.collider.tag == "Ceiling"))
@@ -120,7 +120,7 @@ namespace DM
 
                 camToWallDistance = Vector3.Distance(mainCamera.position, hit.transform.position);
 
-                // KEEP SHADOW BEFORE DISABLING MESH RENDERER TO GIVE ILLUSION THAT WALL IS STILL THERE
+                // keep shadows only to give the illusion that the object is still there 
                 if (camToWallDistance >= camToPlayerDistance - offset)
                     hit.transform.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
             }

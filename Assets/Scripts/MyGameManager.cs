@@ -9,6 +9,10 @@ public class MyGameManager : NetworkBehaviour
     public List<GameObject> availablePlayers = new List<GameObject>();
 
     [SyncVar] public bool gameInProgress = false;
+    [SyncVar] public bool teamAWon = false;
+    [SyncVar] public bool teamBWon = false;
+
+    public int minPlayersPerTeam = 2;
 
     Text startGameText;
     Text countdownText3;
@@ -20,9 +24,9 @@ public class MyGameManager : NetworkBehaviour
     Text teamBWonText;
 
     AudioSource startGameSound;
+
     ScoreManager scoreManager;
 
-    public int tempPlayerCount = 2;
 
     void Start()
     {
@@ -30,10 +34,8 @@ public class MyGameManager : NetworkBehaviour
         countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
         countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
         countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
-
         teamAPlayerCountText = GameObject.Find("TeamAPlayerCountText").GetComponent<Text>();
         teamBPlayerCountText = GameObject.Find("TeamBPlayerCountText").GetComponent<Text>();
-
         teamAWonText = GameObject.Find("TeamAWonText").GetComponent<Text>();
         teamBWonText = GameObject.Find("TeamBWonText").GetComponent<Text>();
 
@@ -52,16 +54,9 @@ public class MyGameManager : NetworkBehaviour
         if (!isServer)
             return;
 
-        // IF 4 PLAYERS HAVE JOINED, START THE GAME 
-        if (!gameInProgress && NetworkServer.connections.Count > 3)
+        // only start game if 4 players have joined
+        if (!gameInProgress && NetworkServer.connections.Count >= minPlayersPerTeam * 2)
             StartCoroutine(StartGame());
-
-        if (teamAPlayerCountText.enabled && teamBPlayerCountText.enabled)
-            RpcUpdatePlayerCountTexts();
-
-        // IF ANY OF THE TEAMS WIN, SET THEIR WINNING TEXT
-        if (gameInProgress && scoreManager.teamAWon || scoreManager.teamBWon)
-            RpcSetWinningTeamText();
     }
 
     IEnumerator StartGame()
@@ -70,9 +65,7 @@ public class MyGameManager : NetworkBehaviour
 
         RpcSetStartGameUI();
         RpcSetGameInProgress();
-        RpcSetPlayerCountTexts();
     }
-
 
 
     [ClientRpc]
@@ -110,30 +103,32 @@ public class MyGameManager : NetworkBehaviour
 
         countdownText1.enabled = false;
         startGameSound.Play();
+
+        teamAPlayerCountText.text = $"Team A Players : {minPlayersPerTeam}";
+        teamBPlayerCountText.text = $"Team B Players : {minPlayersPerTeam}";
     }
+
 
     [ClientRpc]
-    void RpcSetPlayerCountTexts()
+    public void RpcUpdatePlayerCountTexts()
     {
-        teamAPlayerCountText.enabled = true;
-        teamBPlayerCountText.text = $"Team A Players Remaining : {tempPlayerCount}";
-
-        teamAPlayerCountText.enabled = true;
-        teamBPlayerCountText.text = $"Team B Players Remaining : {tempPlayerCount}";
+        teamAPlayerCountText.text = $"Team A Players : {minPlayersPerTeam - scoreManager.teams["TeamA"].Count}";
+        teamBPlayerCountText.text = $"Team B Players : {minPlayersPerTeam - scoreManager.teams["TeamB"].Count}";
     }
 
-    [ClientRpc]
-    void RpcUpdatePlayerCountTexts()
+    public void CheckIfTeamWon()
     {
-        teamAPlayerCountText.text = $"Team A Players Remaining: {tempPlayerCount - scoreManager.teams["TeamA"].Count}";
-        teamBPlayerCountText.text = $"Team B Players Remaining: {tempPlayerCount - scoreManager.teams["TeamB"].Count}";
-    }
+        teamBWon = scoreManager.teams["TeamA"].Count == minPlayersPerTeam;
+        teamAWon = scoreManager.teams["TeamB"].Count == minPlayersPerTeam;
 
+        if (teamAWon || teamBWon)
+            RpcSetWinningTeamText();
+    }
 
     [ClientRpc]
     void RpcSetWinningTeamText()
     {
-        if (scoreManager.teamAWon)
+        if (teamAWon)
             teamAWonText.enabled = true;
         else
             teamBWonText.enabled = true;

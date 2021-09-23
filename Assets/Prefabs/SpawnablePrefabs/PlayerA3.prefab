@@ -1280,6 +1280,7 @@ MonoBehaviour:
   isPickedUp: 0
   toActivateTeammateRagdoll: 0
   isLetGo: 0
+  isDead: 0
   teammate: {fileID: 0}
 --- !u!95 &7899800692230665678
 Animator:
@@ -1336,7 +1337,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4635997670392463147}
   serializedVersion: 6
-  lengthInSec: 3
+  lengthInSec: 2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -1580,7 +1581,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 3
       minScalar: 1
       maxCurve:
         serializedVersion: 2

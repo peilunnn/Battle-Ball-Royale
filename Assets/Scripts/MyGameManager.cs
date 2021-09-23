@@ -12,7 +12,7 @@ public class MyGameManager : NetworkBehaviour
     [SyncVar] public bool teamAWon = false;
     [SyncVar] public bool teamBWon = false;
 
-    int minPlayersPerTeam = 1;
+    int minPlayersPerTeam = 2;
 
     Text startGameText;
     Text countdownText3;
@@ -55,10 +55,7 @@ public class MyGameManager : NetworkBehaviour
 
         // only start game if 4 players have joined
         if (!gameInProgress && NetworkServer.connections.Count >= minPlayersPerTeam * 2)
-        {
-            Debug.Log("start game");
             StartCoroutine(StartGame());
-        }
     }
 
     IEnumerator StartGame()

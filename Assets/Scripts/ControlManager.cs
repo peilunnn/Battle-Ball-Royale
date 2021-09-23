@@ -37,6 +37,7 @@ namespace DM
         Animator anim;      //for caching Animator component
         [HideInInspector] public Rigidbody rigid;     //for caching Rigidbody component
         CameraManager camManager;   //for caching CameraManager script
+        PickUpThrow pickUpThrow;   //for caching CameraManager script
         [SerializeField] AudioSource footstep;
 
         void Awake() => footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
@@ -51,6 +52,8 @@ namespace DM
 
             camManager = CameraManager.singleton;
             camManager.Init(this.transform);
+
+            pickUpThrow = gameObject.GetComponent<PickUpThrow>();
         }
 
         void SetupAnimator()
@@ -107,7 +110,7 @@ namespace DM
             horizontal = Input.GetAxis("Horizontal");    //for getting horizontal input.
             sprint = Input.GetButton("SprintInput");     //for getting sprint input.
             jump = Input.GetButtonDown("Jump");      //for getting jump input.
-            roll = Input.GetButtonDown("Fire3");     //for getting roll input.
+            roll = Input.GetButtonDown("RollInput");     //for getting roll input.
         }
 
 
@@ -124,7 +127,7 @@ namespace DM
                 }
             }
 
-            if (roll && onGround)    //I clicked for roll. middle mouse button or Y key in the joypad.
+            if (roll && onGround && !pickUpThrow.isPicker)    //I clicked for roll. middle mouse button or Y key in the joypad.
                 GetComponent<NetworkAnimator>().SetTrigger("roll");
 
             float targetSpeed = moveSpeed;  //set run speed as target speed.

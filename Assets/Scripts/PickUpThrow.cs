@@ -3,7 +3,7 @@ using Mirror;
 
 public class PickUpThrow : NetworkBehaviour
 {
-    [SyncVar] [SerializeField] bool isPicker = false;
+    [SyncVar] public bool isPicker = false;
     [SyncVar] [SerializeField] bool isPickedUp = false;
     [SyncVar] [SerializeField] bool toActivateTeammateRagdoll = false;
     [SyncVar] public bool isLetGo = false;

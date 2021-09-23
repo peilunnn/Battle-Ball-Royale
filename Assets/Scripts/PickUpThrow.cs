@@ -41,11 +41,10 @@ public class PickUpThrow : NetworkBehaviour
         if (isDead)
             return;
 
-        // IF PLAYER PRESSES E, SET STATES
-        if (!isPicker && !isPickedUp && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && !isPicker && !isPickedUp)
             CmdSetPickUpStates();
 
-        // IF SUCCESSFUL PICK UP, ACTIVATE TEAMMATE RAGDOLL EVERY FRAME 
+        // if successful pick up, activate teammate ragdoll every frame
         if (toActivateTeammateRagdoll)
         {
             DrawLineOfFire();
@@ -73,24 +72,25 @@ public class PickUpThrow : NetworkBehaviour
         Ray ray = new Ray(this.transform.position, this.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {
-            // IF I TRY TO PICK UP SOMEONE WHO IS NOT MY TEAMMATE, DONT DO ANYTHING 
+            // if someone tries to pick up a non-teammate, don't do anything 
             if (hit.collider.tag != gameObject.tag)
                 return;
 
-            // RAYCAST HIT TEAMMATE, SET BOTH PLAYERS' STATES
-            isPicker = true;
-            toActivateTeammateRagdoll = true;
             teammate = hit.collider.gameObject;
             teammateScript = teammate.GetComponent<PickUpThrow>();
+
+            // if teammate is already picking someone else, he is not pickable
+            if (teammateScript.isPicker)
+                return;
+
+            isPicker = true;
+            toActivateTeammateRagdoll = true;
             teammateScript.isPickedUp = true;
         }
     }
 
     [Command]
-    void CmdActivateTeammateRagdoll()
-    {
-        RpcActivateTeammateRagdoll();
-    }
+    void CmdActivateTeammateRagdoll() => RpcActivateTeammateRagdoll();
 
     [ClientRpc]
     void RpcActivateTeammateRagdoll()
@@ -114,22 +114,13 @@ public class PickUpThrow : NetworkBehaviour
 
 
     [Command]
-    void CmdRemoveLineOfFire()
-    {
-        RpcRemoveLineOfFire();
-    }
+    void CmdRemoveLineOfFire() => RpcRemoveLineOfFire();
 
     [TargetRpc]
-    void RpcRemoveLineOfFire()
-    {
-        lineOfFire.enabled = false;
-    }
+    void RpcRemoveLineOfFire() => lineOfFire.enabled = false;
 
     [Command]
-    public void CmdDeactivateOwnRagdoll()
-    {
-        RpcDeactivateOwnRagdoll();
-    }
+    public void CmdDeactivateOwnRagdoll() => RpcDeactivateOwnRagdoll();
 
     [ClientRpc]
     void RpcDeactivateOwnRagdoll()
@@ -139,10 +130,7 @@ public class PickUpThrow : NetworkBehaviour
     }
 
     [Command]
-    void CmdThrow()
-    {
-        RpcThrow();
-    }
+    void CmdThrow() => RpcThrow();
 
     [ClientRpc]
     void RpcThrow()
@@ -160,6 +148,5 @@ public class PickUpThrow : NetworkBehaviour
         teammateScript.isPickedUp = false;
         isPicker = false;
         toActivateTeammateRagdoll = false;
-        // teammate = null;
     }
 }

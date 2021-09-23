@@ -60,16 +60,10 @@ public class DetectCollisions : NetworkBehaviour
     }
 
     [Command]
-    void CmdOnCollisionWithGround()
-    {
-        RpcOnCollisionWithGround();
-    }
+    void CmdOnCollisionWithGround() => RpcOnCollisionWithGround();
 
     [ClientRpc]
-    void RpcOnCollisionWithGround()
-    {
-        StartCoroutine(OnCollisionWithGround());
-    }
+    void RpcOnCollisionWithGround() => StartCoroutine(OnCollisionWithGround());
 
     IEnumerator OnCollisionWithGround()
     {
@@ -90,10 +84,7 @@ public class DetectCollisions : NetworkBehaviour
     }
 
     [Command]
-    void CmdOnCollisionWithOpponent(GameObject opponent)
-    {
-        RpcOnCollisionWithOpponent(opponent);
-    }
+    void CmdOnCollisionWithOpponent(GameObject opponent) => RpcOnCollisionWithOpponent(opponent);
 
     [ClientRpc]
     void RpcOnCollisionWithOpponent(GameObject opponent)

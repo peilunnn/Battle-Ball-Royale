@@ -93,10 +93,7 @@ namespace DM
 
         public static CameraManager singleton;
 
-        private void Awake()
-        {
-            singleton = this;
-        }
+        private void Awake() => singleton = this;
 
         void OnViewObstructed()
         {

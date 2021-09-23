@@ -12,7 +12,7 @@ public class MyGameManager : NetworkBehaviour
     [SyncVar] public bool teamAWon = false;
     [SyncVar] public bool teamBWon = false;
 
-    public int minPlayersPerTeam = 2;
+    int minPlayersPerTeam = 1;
 
     Text startGameText;
     Text countdownText3;
@@ -34,8 +34,10 @@ public class MyGameManager : NetworkBehaviour
         countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
         countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
         countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
+
         teamAPlayerCountText = GameObject.Find("TeamAPlayerCountText").GetComponent<Text>();
         teamBPlayerCountText = GameObject.Find("TeamBPlayerCountText").GetComponent<Text>();
+
         teamAWonText = GameObject.Find("TeamAWonText").GetComponent<Text>();
         teamBWonText = GameObject.Find("TeamBWonText").GetComponent<Text>();
 
@@ -44,10 +46,7 @@ public class MyGameManager : NetworkBehaviour
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
     }
 
-    public GameObject GetRandomPlayer()
-    {
-        return availablePlayers[Random.Range(0, availablePlayers.Count)];
-    }
+    public GameObject GetRandomPlayer() => availablePlayers[Random.Range(0, availablePlayers.Count)];
 
     void Update()
     {
@@ -56,7 +55,10 @@ public class MyGameManager : NetworkBehaviour
 
         // only start game if 4 players have joined
         if (!gameInProgress && NetworkServer.connections.Count >= minPlayersPerTeam * 2)
+        {
+            Debug.Log("start game");
             StartCoroutine(StartGame());
+        }
     }
 
     IEnumerator StartGame()
@@ -64,21 +66,12 @@ public class MyGameManager : NetworkBehaviour
         yield return new WaitForSeconds(1);
 
         RpcSetStartGameUI();
-        RpcSetGameInProgress();
-    }
-
-
-    [ClientRpc]
-    void RpcSetGameInProgress()
-    {
         gameInProgress = true;
     }
 
+
     [ClientRpc]
-    void RpcSetStartGameUI()
-    {
-        StartCoroutine(SetStartGameUI());
-    }
+    void RpcSetStartGameUI() => StartCoroutine(SetStartGameUI());
 
     IEnumerator SetStartGameUI()
     {

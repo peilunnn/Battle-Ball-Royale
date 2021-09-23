@@ -39,34 +39,32 @@ namespace DM
         CameraManager camManager;   //for caching CameraManager script
         [SerializeField] AudioSource footstep;
 
-        void Awake()
-        {
-            footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
-        }
+        void Awake() => footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
 
-        void Start() // Initiallizing camera, animator, rigidboy
+        void Start()
         {
             SetupAnimator();
             rigid = GetComponent<Rigidbody>();
 
             if (!isLocalPlayer)
                 return;
+
             camManager = CameraManager.singleton;
             camManager.Init(this.transform);
         }
 
-        void SetupAnimator()//Setting up Animator component in the hierarchy.
+        void SetupAnimator()
         {
-            if (activeModel == null)
+            if (!activeModel)
             {
                 anim = GetComponentInChildren<Animator>();//Find animator component in the children hierarchy.
-                if (anim == null)
+                if (!anim)
                     Debug.Log("No model");
                 else
                     activeModel = anim.gameObject; //save this gameobject as active model.
             }
 
-            if (anim == null)
+            if (!anim)
                 anim = activeModel.GetComponent<Animator>();
         }
 
@@ -94,10 +92,7 @@ namespace DM
         }
 
         [Command]
-        void CmdPlayFootstepSound()
-        {
-            RpcPlayFootstepSound();
-        }
+        void CmdPlayFootstepSound() => RpcPlayFootstepSound();
 
         [ClientRpc]
         void RpcPlayFootstepSound()
@@ -159,11 +154,8 @@ namespace DM
 
             float pDelta = d;
 
-            if (onGround)
-            {
-                if (canMove)
-                    rigid.velocity = moveDir;  //This controls the character movement.                  
-            }
+            if (onGround && canMove)
+                rigid.velocity = moveDir;  //This controls the character movement.                  
 
             //This can control character's rotation.
             if (canMove)

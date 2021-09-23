@@ -11,7 +11,7 @@ public class MyNetworkManager : NetworkManager
         playerPrefab = gameManager.GetRandomPlayer();
         base.OnServerAddPlayer(conn);
 
-        gameManager.availablePlayers.Remove(playerPrefab);
+        gameManager.RpcRemoveFromAvailablePlayers(playerPrefab);
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)

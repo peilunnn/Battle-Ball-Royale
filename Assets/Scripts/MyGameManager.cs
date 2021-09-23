@@ -27,6 +27,9 @@ public class MyGameManager : NetworkBehaviour
 
     ScoreManager scoreManager;
 
+    bool isPlaytesting = true;
+    int i = 0;
+
 
     void Start()
     {
@@ -46,7 +49,16 @@ public class MyGameManager : NetworkBehaviour
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
     }
 
-    public GameObject GetRandomPlayer() => availablePlayers[Random.Range(0, availablePlayers.Count)];
+    public GameObject GetRandomPlayer()
+    {
+        if (!isPlaytesting)
+            return availablePlayers[Random.Range(0, availablePlayers.Count)];
+
+        return availablePlayers[i++];
+    }
+
+    [ClientRpc]
+    public void RpcRemoveFromAvailablePlayers(GameObject playerPrefab) => availablePlayers.Remove(playerPrefab);
 
     void Update()
     {

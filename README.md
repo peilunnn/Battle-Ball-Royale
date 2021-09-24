@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 
+[Gameplay](#gameplay)
+
+[How to Play](#how-to-play)
   
-
-https://user-images.githubusercontent.com/61407534/134393030-462e4aa9-5aee-46e4-8cd3-70ff8d330c9f.mp4
-
+[Social Media](#social-media)
+  
+  ### Gameplay
+  https://user-images.githubusercontent.com/61407534/134393030-462e4aa9-5aee-46e4-8cd3-70ff8d330c9f.mp4
 
   <!-- TITLE -->
 
@@ -18,21 +22,11 @@ https://user-images.githubusercontent.com/61407534/134393030-462e4aa9-5aee-46e4-
     <a href="https://github.com/peilunnn/Battle-Ball-Royale/issues">Report Bug</a>
     ·
   </p>
-
 </p>
+
 <br /><br />
 
-
-<!-- TABLE OF CONTENTS -->
-
-## Table of Contents :notebook_with_decorative_cover:
-
-* [About the Project :eyes:](#about-the-project)
-* [Social Media :fire:](#contact)
-<br /><br /><br />
-
-## About The Project :eyes:
-
+### How to Play
 **Movement**
 * WASD to move
 * Space to jump
@@ -44,16 +38,10 @@ https://user-images.githubusercontent.com/61407534/134393030-462e4aa9-5aee-46e4-
 **Picking Up and Throwing**
 * When a teammate is in range, press E to pick him up
 * Left click to throw him or right click to put him down
+
 <br /><br /><br />
 
-## Social Media :fire:
-
+### Social Media
 🥂**Pei Lun** 
-
 🔗 [LinkedIn](https://www.linkedin.com/in/pei-lun-tan/)
-
 📧 [Email](mailto:PTAN065@e.ntu.edu.sg)
-
-
-
-

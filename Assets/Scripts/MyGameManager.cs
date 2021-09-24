@@ -12,7 +12,7 @@ public class MyGameManager : NetworkBehaviour
     [SyncVar] public bool teamAWon = false;
     [SyncVar] public bool teamBWon = false;
 
-    int minPlayersPerTeam = 2;
+    int minPlayersPerTeam = 1;
 
     Text startGameText;
     Text countdownText3;
@@ -27,7 +27,7 @@ public class MyGameManager : NetworkBehaviour
 
     ScoreManager scoreManager;
 
-    bool isPlaytesting = true;
+    bool isPlaytesting = false;
     int i = 0;
 
 

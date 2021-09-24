@@ -1,5 +1,6 @@
 using UnityEngine;
 using Mirror;
+using UnityEngine.UI;
 
 public class PickUpThrow : NetworkBehaviour
 {
@@ -9,59 +10,55 @@ public class PickUpThrow : NetworkBehaviour
     [SyncVar] public bool isLetGo = false;
     [SyncVar] public bool isDead = false;
 
-    [SyncVar] [SerializeField] GameObject teammate;
-    PickUpThrow teammateScript;
+    [SyncVar] GameObject teammate;
+    PickUpThrow targetTeammateScript;
+    PickUpThrow pickerScript;
 
     Transform destPos;
-    LineRenderer lineOfFire;
     float throwForce = 1000;
     Rigidbody rb;
 
     MyGameManager gameManager;
 
-    void Awake()
+    Image crosshairImage;
+
+    void Start()
     {
         Physics.IgnoreLayerCollision(9, 8, true);
-        gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
-        lineOfFire = GetComponent<LineRenderer>();
+
         destPos = transform.GetChild(0);
         rb = GetComponent<Rigidbody>();
+        gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
+        crosshairImage = GameObject.Find("Crosshair").GetComponent<Image>();
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.gameInProgress || !isLocalPlayer)
+        if (!gameManager.gameInProgress || !isLocalPlayer || isDead)
             return;
 
         if (isLetGo)
-            CmdDeactivateOwnRagdoll();
-
-        if (isDead)
-            return;
+            CmdDetach();
 
         if (Input.GetKeyDown(KeyCode.E) && !isPicker && !isPickedUp)
             CmdSetPickUpStates();
 
         // if successful pick up, activate teammate ragdoll every frame
         if (toActivateTeammateRagdoll)
-        {
-            DrawLineOfFire();
             CmdActivateTeammateRagdoll();
-        }
 
-        // IF PLAYER RIGHT CLICKS, PUT TEAMMATE DOWN
-        // OTHERWISE IF PLAYER LEFT CLICKS, THROW TEAMMATE
-        if (isPicker)
+        if (isPickedUp)
         {
+            AimRotation();
+
             if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
             {
-                CmdRemoveLineOfFire();
-                CmdSetPutDownOrThrowStates();
-
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                     CmdThrow();
+
+                CmdDeactivateRagdoll();
             }
         }
     }
@@ -69,7 +66,7 @@ public class PickUpThrow : NetworkBehaviour
     [Command]
     void CmdSetPickUpStates()
     {
-        Ray ray = new Ray(this.transform.position, this.transform.forward);
+        Ray ray = new Ray(transform.position, transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, 800f))
         {
             // if someone tries to pick up a non-teammate, don't do anything 
@@ -77,15 +74,15 @@ public class PickUpThrow : NetworkBehaviour
                 return;
 
             teammate = hit.collider.gameObject;
-            teammateScript = teammate.GetComponent<PickUpThrow>();
+            targetTeammateScript = teammate.GetComponent<PickUpThrow>();
 
             // if teammate is already picking someone else, he is not pickable
-            if (teammateScript.isPicker)
+            if (targetTeammateScript.isPicker)
                 return;
 
             isPicker = true;
             toActivateTeammateRagdoll = true;
-            teammateScript.isPickedUp = true;
+            targetTeammateScript.isPickedUp = true;
         }
     }
 
@@ -105,48 +102,49 @@ public class PickUpThrow : NetworkBehaviour
     }
 
 
-    void DrawLineOfFire()
+    void AimRotation()
     {
-        lineOfFire.enabled = true;
-        lineOfFire.SetPosition(0, teammate.transform.position + new Vector3(0, 0.5f, 0));
-        lineOfFire.SetPosition(1, transform.forward * 10 + transform.position);
-    }
+        crosshairImage.enabled = true;
+        Vector3 mouseWorldPosition = Vector3.zero;
 
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2, Screen.height / 2);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
 
-    [Command]
-    void CmdRemoveLineOfFire() => RpcRemoveLineOfFire();
+        Vector3 worldAimTarget = mouseWorldPosition;
+        worldAimTarget.y = transform.position.y;
+        Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
 
-    [TargetRpc]
-    void RpcRemoveLineOfFire() => lineOfFire.enabled = false;
-
-    [Command]
-    public void CmdDeactivateOwnRagdoll() => RpcDeactivateOwnRagdoll();
-
-    [ClientRpc]
-    void RpcDeactivateOwnRagdoll()
-    {
-        transform.parent = null;
-        rb.useGravity = true;
+        transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
     }
 
     [Command]
     void CmdThrow() => RpcThrow();
 
     [ClientRpc]
-    void RpcThrow()
-    {
-        if (!teammate)
-            return;
+    void RpcThrow() => rb.AddForce(transform.forward * throwForce);
 
-        teammate.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
+    [Command]
+    public void CmdDeactivateRagdoll() => RpcDeactivateRagdoll();
+
+    [ClientRpc]
+    void RpcDeactivateRagdoll()
+    {
+        isLetGo = true;
+        isPickedUp = false;
+        isPicker = false;
+
+        pickerScript = transform.parent.parent.gameObject.GetComponent<PickUpThrow>();
+        pickerScript.isPicker = false;
+        pickerScript.toActivateTeammateRagdoll = false;
     }
 
     [Command]
-    void CmdSetPutDownOrThrowStates()
+    void CmdDetach() => RpcDetach();
+
+    [ClientRpc]
+    void RpcDetach()
     {
-        teammateScript.isLetGo = true;
-        teammateScript.isPickedUp = false;
-        isPicker = false;
-        toActivateTeammateRagdoll = false;
+        transform.parent = null;
+        rb.useGravity = true;
     }
 }

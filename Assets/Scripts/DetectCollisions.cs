@@ -51,7 +51,7 @@ public class DetectCollisions : NetworkBehaviour
             {
                 GameObject opponent = other.gameObject;
                 CmdOnCollisionWithOpponent(opponent);
-                pickUpThrow.CmdDeactivateOwnRagdoll();
+                pickUpThrow.CmdDeactivateRagdoll();
             }
 
             else

@@ -1281,7 +1281,6 @@ MonoBehaviour:
   toActivateTeammateRagdoll: 0
   isLetGo: 0
   isDead: 0
-  teammate: {fileID: 0}
 --- !u!95 &7899800692230665678
 Animator:
   serializedVersion: 3

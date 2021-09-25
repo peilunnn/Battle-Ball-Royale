@@ -27,7 +27,7 @@ public class MyGameManager : NetworkBehaviour
 
     ScoreManager scoreManager;
 
-    bool isPlaytesting = false;
+    public bool isPlaytesting;
     int i = 0;
 
 

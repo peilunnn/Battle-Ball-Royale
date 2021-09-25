@@ -16,11 +16,13 @@ public class PickUpThrow : NetworkBehaviour
 
     Transform destPos;
     float throwForce = 1000;
+    Vector3 throwDirection;
     Rigidbody rb;
 
     MyGameManager gameManager;
 
     Image crosshairImage;
+
 
     void Start()
     {
@@ -30,6 +32,8 @@ public class PickUpThrow : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
         crosshairImage = GameObject.Find("Crosshair").GetComponent<Image>();
+
+        Cursor.visible = gameManager.isPlaytesting ? false : true;
     }
 
 
@@ -48,18 +52,25 @@ public class PickUpThrow : NetworkBehaviour
         // if successful pick up, activate teammate ragdoll every frame
         if (toActivateTeammateRagdoll)
             CmdActivateTeammateRagdoll();
+    }
+
+    void FixedUpdate()
+    {
+        if (!gameManager.gameInProgress || !isLocalPlayer || isDead)
+            return;
 
         if (isPickedUp)
         {
-            AimRotation();
+            Aim();
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
-                    CmdThrow();
+            if (!(Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1)))
+                return;
 
-                CmdDeactivateRagdoll();
-            }
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+                CmdThrow();
+
+            CmdDeactivateRagdoll();
+            crosshairImage.enabled = false;
         }
     }
 
@@ -101,27 +112,27 @@ public class PickUpThrow : NetworkBehaviour
         teammate.GetComponent<Rigidbody>().useGravity = false;
     }
 
-
-    void AimRotation()
+    void Aim()
     {
         crosshairImage.enabled = true;
-        Vector3 mouseWorldPosition = Vector3.zero;
-
-        Vector2 screenCenterPoint = new Vector2(Screen.width / 2, Screen.height / 2);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-
-        Vector3 worldAimTarget = mouseWorldPosition;
-        worldAimTarget.y = transform.position.y;
-        Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
-
-        transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+        crosshairImage.transform.position = Input.mousePosition;
     }
 
     [Command]
     void CmdThrow() => RpcThrow();
 
     [ClientRpc]
-    void RpcThrow() => rb.AddForce(transform.forward * throwForce);
+    void RpcThrow()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(crosshairImage.transform.position);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 200))
+        {
+            Debug.Log(raycastHit.transform.gameObject);
+            throwDirection = raycastHit.point - transform.position;
+            throwDirection += new Vector3(0, 2, 0);
+            rb.AddForce(throwDirection.normalized * throwForce);
+        }
+    }
 
     [Command]
     public void CmdDeactivateRagdoll() => RpcDeactivateRagdoll();

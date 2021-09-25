@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEditor;
 
 public class DetectCollisions : NetworkBehaviour
 {
@@ -100,6 +100,10 @@ public class DetectCollisions : NetworkBehaviour
         pickUpThrow.isLetGo = false;
 
         opponent.GetComponent<PickUpThrow>().isDead = true;
+
+        Component opponentHalo = opponent.GetComponent("Halo");
+        opponentHalo.GetType().GetProperty("m_Color").SetValue(opponentHalo, Color.white);
+
         opponent.GetComponent<Animator>().enabled = false;
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 

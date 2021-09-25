@@ -25,10 +25,19 @@ namespace DM
         public float tiltAngle;
 
         Transform mainCamera;
+        int defaultMaskIndex;
+        int crosshairMaskIndex;
+        GameObject obstruction;
         RaycastHit[] hits = new RaycastHit[0];
         float camToPlayerDistance;
         float camToWallDistance;
         float offset = 10f;
+
+        void Start()
+        {
+            defaultMaskIndex = LayerMask.NameToLayer("Default");
+            crosshairMaskIndex = LayerMask.NameToLayer("Crosshair");
+        }
 
         public void Init(Transform t)   //Initiallize camera settings.
         {
@@ -101,7 +110,11 @@ namespace DM
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider && (hit.collider.tag == "Wall" || hit.collider.tag == "Ceiling"))
-                    hit.transform.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                {
+                    obstruction = hit.transform.gameObject;
+                    obstruction.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                    obstruction.layer = defaultMaskIndex;
+                }
             }
 
             camToPlayerDistance = Vector3.Distance(mainCamera.position, target.position);
@@ -119,7 +132,11 @@ namespace DM
 
                 // keep shadows only to give the illusion that the object is still there 
                 if (camToWallDistance >= camToPlayerDistance - offset)
-                    hit.transform.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                {
+                    obstruction = hit.transform.gameObject;
+                    obstruction.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                    obstruction.layer = crosshairMaskIndex;
+                }
             }
         }
     }

@@ -1222,7 +1222,6 @@ MonoBehaviour:
   canMove: 0
   roll: 0
   rigid: {fileID: 0}
-  footstep: {fileID: 0}
 --- !u!114 &4635997670392463186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1282,6 +1281,9 @@ MonoBehaviour:
   toActivateTeammateRagdoll: 0
   isLetGo: 0
   isDead: 0
+  crosshairColliderLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!95 &7899800692230665678
 Animator:
   serializedVersion: 3

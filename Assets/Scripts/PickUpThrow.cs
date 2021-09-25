@@ -15,8 +15,11 @@ public class PickUpThrow : NetworkBehaviour
     PickUpThrow pickerScript;
 
     Transform destPos;
-    float throwForce = 800;
+    [SerializeField] RaycastHit[] hits = new RaycastHit[0];
+    float throwForce = 1000;
     Vector3 throwDirection;
+    Vector3 verticalOffset = new Vector3(0, 5, 0);
+    int crosshairMaskIndex;
     Rigidbody rb;
 
     MyGameManager gameManager;
@@ -30,10 +33,13 @@ public class PickUpThrow : NetworkBehaviour
 
         destPos = transform.GetChild(0);
         rb = GetComponent<Rigidbody>();
-        gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
-        crosshairImage = GameObject.Find("Crosshair").GetComponent<Image>();
 
+        gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
+
+        crosshairImage = GameObject.Find("Crosshair").GetComponent<Image>();
         Cursor.visible = gameManager.isPlaytesting ? false : true;
+
+        crosshairMaskIndex = LayerMask.GetMask("Crosshair");
     }
 
 
@@ -46,6 +52,7 @@ public class PickUpThrow : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.E) && !isPicker && !isPickedUp)
             CmdSetPickUpStates();
     }
+
 
     void FixedUpdate()
     {
@@ -63,8 +70,6 @@ public class PickUpThrow : NetworkBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                     CmdThrow();
-
-                // CmdDetach();
             }
         }
 
@@ -75,6 +80,7 @@ public class PickUpThrow : NetworkBehaviour
         if (toActivateTeammateRagdoll)
             CmdActivateTeammateRagdoll();
     }
+
 
     [Command]
     void CmdSetPickUpStates()
@@ -99,8 +105,10 @@ public class PickUpThrow : NetworkBehaviour
         }
     }
 
+
     [Command]
     void CmdActivateTeammateRagdoll() => RpcActivateTeammateRagdoll();
+
 
     [ClientRpc]
     void RpcActivateTeammateRagdoll()
@@ -111,29 +119,34 @@ public class PickUpThrow : NetworkBehaviour
         teammate.GetComponent<Rigidbody>().useGravity = false;
     }
 
+
     void Aim()
     {
         crosshairImage.enabled = true;
         crosshairImage.transform.position = Input.mousePosition;
     }
 
+
     [Command]
     void CmdThrow() => RpcThrow();
+
 
     [ClientRpc]
     void RpcThrow()
     {
         Ray ray = Camera.main.ScreenPointToRay(crosshairImage.transform.position);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 200))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000, 1 << crosshairMaskIndex))
         {
-            throwDirection = raycastHit.point - transform.position;
-            throwDirection += new Vector3(0, 2, 0);
+            throwDirection = hit.point - transform.position;
+            throwDirection += verticalOffset;
             rb.AddForce(throwDirection.normalized * throwForce);
         }
     }
 
+
     [Command]
     public void CmdDeactivateRagdoll() => RpcDeactivateRagdoll();
+
 
     [ClientRpc]
     void RpcDeactivateRagdoll()
@@ -146,8 +159,10 @@ public class PickUpThrow : NetworkBehaviour
         transform.parent.parent.gameObject.GetComponent<PickUpThrow>().toActivateTeammateRagdoll = false;
     }
 
+
     [Command]
     void CmdDetach() => RpcDetach();
+
 
     [ClientRpc]
     void RpcDetach()

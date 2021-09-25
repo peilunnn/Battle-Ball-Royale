@@ -7,7 +7,6 @@ public class DetectCollisions : NetworkBehaviour
 {
     PickUpThrow pickUpThrow;
 
-    AudioSource impactSound;
     ParticleSystem smoke;
     Animator animator;
 
@@ -16,8 +15,12 @@ public class DetectCollisions : NetworkBehaviour
     Vector3 shrunkCenter = new Vector3(-0.03f, 0.9f, -0.03f);
     Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
 
+    Light opponentGlow;
+
     ScoreManager scoreManager;
     MyGameManager gameManager;
+    AudioManager audioManager;
+    UIManager UIManager;
 
 
     // Start is called before the first frame update
@@ -25,7 +28,6 @@ public class DetectCollisions : NetworkBehaviour
     {
         pickUpThrow = gameObject.GetComponent<PickUpThrow>();
 
-        impactSound = GameObject.Find("Impact").GetComponent<AudioSource>();
         smoke = GetComponent<ParticleSystem>();
         animator = GetComponent<Animator>();
 
@@ -34,6 +36,8 @@ public class DetectCollisions : NetworkBehaviour
 
         scoreManager = GameObject.Find("ScoreManager").GetComponent<ScoreManager>();
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
     void OnCollisionEnter(Collision other)
@@ -89,7 +93,7 @@ public class DetectCollisions : NetworkBehaviour
     [ClientRpc]
     void RpcOnCollisionWithOpponent(GameObject opponent)
     {
-        impactSound.Play();
+        audioManager.impactSound.Play();
         smoke.Play();
         animator.enabled = true;
 
@@ -101,14 +105,15 @@ public class DetectCollisions : NetworkBehaviour
 
         opponent.GetComponent<PickUpThrow>().isDead = true;
 
-        Component opponentHalo = opponent.GetComponent("Halo");
-        opponentHalo.GetType().GetProperty("m_Color").SetValue(opponentHalo, Color.white);
+        opponentGlow = opponent.GetComponent<Light>();
+        opponentGlow.color = Color.white;
 
         opponent.GetComponent<Animator>().enabled = false;
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 
+        // add opponent to his teams list
         scoreManager.UpdateDict(opponent);
-        gameManager.RpcUpdatePlayerCountTexts();
-        gameManager.CheckIfTeamWon();
+        UIManager.UpdatePlayerCountTexts();
+        // gameManager.CheckIfTeamWon();
     }
 }

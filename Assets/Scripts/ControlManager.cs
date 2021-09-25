@@ -30,6 +30,7 @@ namespace DM
         public bool sprint;     //shows you are sprinting or not.
         [HideInInspector] public bool jump;       //stores whether you jump or not
         public bool canMove;    //shows you can move or not
+        bool isStationary;
         [HideInInspector] public bool roll;       //stores whether you roll or not
 
         float fixedDelta;        //stores Time.fixedDeltaTime
@@ -37,10 +38,9 @@ namespace DM
         Animator anim;      //for caching Animator component
         [HideInInspector] public Rigidbody rigid;     //for caching Rigidbody component
         CameraManager camManager;   //for caching CameraManager script
+        AudioManager audioManager;
         PickUpThrow pickUpThrow;   //for caching CameraManager script
-        [SerializeField] AudioSource footstep;
 
-        void Awake() => footstep = GameObject.Find("Footstep").GetComponent<AudioSource>();
 
         void Start()
         {
@@ -54,6 +54,7 @@ namespace DM
             camManager.Init(this.transform);
 
             pickUpThrow = gameObject.GetComponent<PickUpThrow>();
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         }
 
         void SetupAnimator()
@@ -100,8 +101,9 @@ namespace DM
         [ClientRpc]
         void RpcPlayFootstepSound()
         {
-            if (footstep && !(footstep.isPlaying))
-                footstep.Play();
+            isStationary = vertical == 0 && horizontal == 0;
+            if (!isStationary && audioManager.footstep && !(audioManager.footstep.isPlaying))
+                audioManager.footstep.Play();
         }
 
         void GetInput() //getting various inputs from keyboard or joypad.

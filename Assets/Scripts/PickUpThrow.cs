@@ -15,7 +15,7 @@ public class PickUpThrow : NetworkBehaviour
     PickUpThrow pickerScript;
 
     Transform destPos;
-    float throwForce = 1000;
+    float throwForce = 800;
     Vector3 throwDirection;
     Rigidbody rb;
 
@@ -43,15 +43,8 @@ public class PickUpThrow : NetworkBehaviour
         if (!gameManager.gameInProgress || !isLocalPlayer || isDead)
             return;
 
-        if (isLetGo)
-            CmdDetach();
-
         if (Input.GetKeyDown(KeyCode.E) && !isPicker && !isPickedUp)
             CmdSetPickUpStates();
-
-        // if successful pick up, activate teammate ragdoll every frame
-        if (toActivateTeammateRagdoll)
-            CmdActivateTeammateRagdoll();
     }
 
     void FixedUpdate()
@@ -63,15 +56,24 @@ public class PickUpThrow : NetworkBehaviour
         {
             Aim();
 
-            if (!(Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1)))
-                return;
+            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                crosshairImage.enabled = false;
+                CmdDeactivateRagdoll();
 
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-                CmdThrow();
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                    CmdThrow();
 
-            CmdDeactivateRagdoll();
-            crosshairImage.enabled = false;
+                // CmdDetach();
+            }
         }
+
+        if (isLetGo)
+            CmdDetach();
+
+        // if successful pick up, activate teammate ragdoll every frame
+        if (toActivateTeammateRagdoll)
+            CmdActivateTeammateRagdoll();
     }
 
     [Command]
@@ -103,9 +105,6 @@ public class PickUpThrow : NetworkBehaviour
     [ClientRpc]
     void RpcActivateTeammateRagdoll()
     {
-        if (!teammate)
-            return;
-
         teammate.transform.position = destPos.position;
         teammate.transform.parent = destPos.transform;
         teammate.GetComponent<Animator>().enabled = false;
@@ -127,7 +126,6 @@ public class PickUpThrow : NetworkBehaviour
         Ray ray = Camera.main.ScreenPointToRay(crosshairImage.transform.position);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 200))
         {
-            Debug.Log(raycastHit.transform.gameObject);
             throwDirection = raycastHit.point - transform.position;
             throwDirection += new Vector3(0, 2, 0);
             rb.AddForce(throwDirection.normalized * throwForce);
@@ -144,9 +142,8 @@ public class PickUpThrow : NetworkBehaviour
         isPickedUp = false;
         isPicker = false;
 
-        pickerScript = transform.parent.parent.gameObject.GetComponent<PickUpThrow>();
-        pickerScript.isPicker = false;
-        pickerScript.toActivateTeammateRagdoll = false;
+        transform.parent.parent.gameObject.GetComponent<PickUpThrow>().isPicker = false;
+        transform.parent.parent.gameObject.GetComponent<PickUpThrow>().toActivateTeammateRagdoll = false;
     }
 
     [Command]

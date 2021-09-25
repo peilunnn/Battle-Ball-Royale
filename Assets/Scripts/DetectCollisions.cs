@@ -40,6 +40,7 @@ public class DetectCollisions : NetworkBehaviour
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
+
     void OnCollisionEnter(Collision other)
     {
         if (!isLocalPlayer)
@@ -55,7 +56,6 @@ public class DetectCollisions : NetworkBehaviour
             {
                 GameObject opponent = other.gameObject;
                 CmdOnCollisionWithOpponent(opponent);
-                pickUpThrow.CmdDeactivateRagdoll();
             }
 
             else
@@ -63,11 +63,14 @@ public class DetectCollisions : NetworkBehaviour
         }
     }
 
+
     [Command]
     void CmdOnCollisionWithGround() => RpcOnCollisionWithGround();
 
+
     [ClientRpc]
     void RpcOnCollisionWithGround() => StartCoroutine(OnCollisionWithGround());
+
 
     IEnumerator OnCollisionWithGround()
     {
@@ -87,8 +90,10 @@ public class DetectCollisions : NetworkBehaviour
         pickUpThrow.isLetGo = false;
     }
 
+
     [Command]
     void CmdOnCollisionWithOpponent(GameObject opponent) => RpcOnCollisionWithOpponent(opponent);
+
 
     [ClientRpc]
     void RpcOnCollisionWithOpponent(GameObject opponent)
@@ -112,8 +117,8 @@ public class DetectCollisions : NetworkBehaviour
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 
         // add opponent to his teams list
-        scoreManager.UpdateDict(opponent);
-        UIManager.UpdatePlayerCountTexts();
+        // scoreManager.UpdateDict(opponent);
+        // UIManager.UpdatePlayerCountTexts();
         // gameManager.CheckIfTeamWon();
     }
 }

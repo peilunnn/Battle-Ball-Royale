@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class PickUpThrow : NetworkBehaviour
 {
     [SyncVar] public bool isPicker = false;
-    [SyncVar] [SerializeField] bool isPickedUp = false;
+    [SyncVar] public bool isPickedUp = false;
     [SyncVar] [SerializeField] bool toActivateTeammateRagdoll = false;
     [SyncVar] public bool isLetGo = false;
     [SyncVar] public bool isDead = false;
@@ -18,7 +18,6 @@ public class PickUpThrow : NetworkBehaviour
     [SerializeField] RaycastHit[] hits = new RaycastHit[0];
     float throwForce = 1000;
     Vector3 throwDirection;
-    Vector3 verticalOffset = new Vector3(0, 5, 0);
     int crosshairMaskIndex;
     Rigidbody rb;
 
@@ -27,7 +26,7 @@ public class PickUpThrow : NetworkBehaviour
     Image crosshairImage;
 
 
-    void Start()
+    void Awake()
     {
         Physics.IgnoreLayerCollision(9, 8, true);
 
@@ -56,7 +55,7 @@ public class PickUpThrow : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (!gameManager.gameInProgress || !isLocalPlayer || isDead)
+        if (!gameManager.gameInProgress || !isLocalPlayer)
             return;
 
         if (isPickedUp)
@@ -138,7 +137,6 @@ public class PickUpThrow : NetworkBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 1000, 1 << crosshairMaskIndex))
         {
             throwDirection = hit.point - transform.position;
-            throwDirection += verticalOffset;
             rb.AddForce(throwDirection.normalized * throwForce);
         }
     }
@@ -155,8 +153,9 @@ public class PickUpThrow : NetworkBehaviour
         isPickedUp = false;
         isPicker = false;
 
-        transform.parent.parent.gameObject.GetComponent<PickUpThrow>().isPicker = false;
-        transform.parent.parent.gameObject.GetComponent<PickUpThrow>().toActivateTeammateRagdoll = false;
+        pickerScript = transform.parent.parent.gameObject.GetComponent<PickUpThrow>();
+        pickerScript.isPicker = false;
+        pickerScript.toActivateTeammateRagdoll = false;
     }
 
 

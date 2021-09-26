@@ -4,7 +4,6 @@ using Mirror;
 public class MyNetworkManager : NetworkManager
 {
     [SerializeField] MyGameManager gameManager;
-    [SerializeField] ScoreManager scoreManager;
 
     public override void OnServerAddPlayer(NetworkConnection conn)
     {

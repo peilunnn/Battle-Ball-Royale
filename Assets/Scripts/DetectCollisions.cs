@@ -15,7 +15,6 @@ public class DetectCollisions : NetworkBehaviour
     Vector3 shrunkCenter = new Vector3(-0.03f, 0.9f, -0.03f);
     Vector3 enlargedCenter = new Vector3(0, 0.45f, -0.03f);
 
-    Light opponentGlow;
 
     ScoreManager scoreManager;
     MyGameManager gameManager;
@@ -23,7 +22,6 @@ public class DetectCollisions : NetworkBehaviour
     UIManager UIManager;
 
 
-    // Start is called before the first frame update
     void Awake()
     {
         pickUpThrow = gameObject.GetComponent<PickUpThrow>();
@@ -74,6 +72,7 @@ public class DetectCollisions : NetworkBehaviour
 
     IEnumerator OnCollisionWithGround()
     {
+        pickUpThrow.isLetGo = false;
         sphereCollider.center = shrunkCenter;
 
         yield return new WaitForSeconds(1);
@@ -83,11 +82,11 @@ public class DetectCollisions : NetworkBehaviour
         yield return new WaitForSeconds(2);
 
         animator.enabled = true;
+
         if (pickUpThrow.isDead)
             animator.enabled = false;
 
         sphereCollider.center = originalCenter;
-        pickUpThrow.isLetGo = false;
     }
 
 
@@ -98,6 +97,9 @@ public class DetectCollisions : NetworkBehaviour
     [ClientRpc]
     void RpcOnCollisionWithOpponent(GameObject opponent)
     {
+        if (opponent.GetComponent<PickUpThrow>().isPickedUp)
+            return;
+
         audioManager.impactSound.Play();
         smoke.Play();
         animator.enabled = true;
@@ -109,16 +111,17 @@ public class DetectCollisions : NetworkBehaviour
         pickUpThrow.isLetGo = false;
 
         opponent.GetComponent<PickUpThrow>().isDead = true;
-
-        opponentGlow = opponent.GetComponent<Light>();
-        opponentGlow.color = Color.white;
-
+        opponent.GetComponent<Light>().range = 1;
         opponent.GetComponent<Animator>().enabled = false;
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 
         // add opponent to his teams list
-        // scoreManager.UpdateDict(opponent);
-        // UIManager.UpdatePlayerCountTexts();
-        // gameManager.CheckIfTeamWon();
+        scoreManager.UpdateDict(opponent);
+
+        if (!isServer)
+            return;
+
+        UIManager.RpcUpdatePlayerCountTexts();
+        gameManager.CheckIfTeamWon();
     }
 }

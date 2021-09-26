@@ -55,12 +55,12 @@ public class MyGameManager : NetworkBehaviour
         gameInProgress = true;
     }
 
-    // public void CheckIfTeamWon()
-    // {
-    //     teamBWon = scoreManager.teams["TeamA"].Count == minPlayersPerTeam;
-    //     teamAWon = scoreManager.teams["TeamB"].Count == minPlayersPerTeam;
+    public void CheckIfTeamWon()
+    {
+        teamBWon = scoreManager.teams["TeamA"].Count == minPlayersPerTeam;
+        teamAWon = scoreManager.teams["TeamB"].Count == minPlayersPerTeam;
 
-    //     if (teamAWon || teamBWon)
-    //         UIManager.RpcSetWinningTeamText();
-    // }
+        if (teamAWon || teamBWon)
+            UIManager.RpcSetWinningTeamText();
+    }
 }

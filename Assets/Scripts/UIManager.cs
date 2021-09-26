@@ -20,7 +20,7 @@ public class UIManager : NetworkBehaviour
 
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         startGameText = GameObject.Find("StartGameText").GetComponent<Text>();
         countdownText3 = GameObject.Find("CountdownText3").GetComponent<Text>();
@@ -69,7 +69,6 @@ public class UIManager : NetworkBehaviour
         teamBPlayerCountText.text = $"Team B Players : {gameManager.minPlayersPerTeam}";
     }
 
-    public void UpdatePlayerCountTexts() => RpcUpdatePlayerCountTexts();
 
     [ClientRpc]
     public void RpcUpdatePlayerCountTexts()
@@ -78,28 +77,13 @@ public class UIManager : NetworkBehaviour
         teamBPlayerCountText.text = $"Team B Players : {gameManager.minPlayersPerTeam - scoreManager.teams["TeamB"].Count}";
     }
 
-    // [ClientRpc]
-    // public void RpcSetWinningTeamText()
-    // {
-    //     if (gameManager.teamAWon)
-    //         teamAWonText.enabled = true;
-    //     else
-    //         teamBWonText.enabled = true;
-    // }
 
-    // [ClientRpc]
-    // public void RpcUpdatePlayerCountTexts()
-    // {
-    //     teamAPlayerCountText.text = $"Team A Players : {gameManager.minPlayersPerTeam - scoreManager.teams["TeamA"].Count}";
-    //     teamBPlayerCountText.text = $"Team B Players : {gameManager.minPlayersPerTeam - scoreManager.teams["TeamB"].Count}";
-    // }
-
-    // [ClientRpc]
-    // public void RpcSetWinningTeamText()
-    // {
-    //     if (gameManager.teamAWon)
-    //         teamAWonText.enabled = true;
-    //     else
-    //         teamBWonText.enabled = true;
-    // }
+    [ClientRpc]
+    public void RpcSetWinningTeamText()
+    {
+        if (gameManager.teamAWon)
+            teamAWonText.enabled = true;
+        else
+            teamBWonText.enabled = true;
+    }
 }

@@ -11,6 +11,8 @@ public class MyNetworkManager : NetworkManager
         base.OnServerAddPlayer(conn);
 
         gameManager.RpcRemoveFromAvailablePlayers(playerPrefab);
+
+        Cursor.visible = gameManager.isPlaytesting ? false : true;
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)

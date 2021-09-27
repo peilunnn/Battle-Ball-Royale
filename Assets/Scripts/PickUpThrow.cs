@@ -16,7 +16,7 @@ public class PickUpThrow : NetworkBehaviour
 
     Transform destPos;
     [SerializeField] RaycastHit[] hits = new RaycastHit[0];
-    float throwForce = 1000;
+    float throwForce = 1500;
     Vector3 throwDirection;
     int crosshairMaskIndex;
     Rigidbody rb;

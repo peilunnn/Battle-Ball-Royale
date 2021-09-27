@@ -80,6 +80,7 @@ namespace Mirror
                     manager.StartClient();
                 }
                 manager.networkAddress = GUILayout.TextField(manager.networkAddress);
+                manager.playerName = GUILayout.TextField(manager.playerName);
                 GUILayout.EndHorizontal();
 
                 // Server Only

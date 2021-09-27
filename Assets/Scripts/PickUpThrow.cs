@@ -73,7 +73,10 @@ public class PickUpThrow : NetworkBehaviour
         }
 
         if (isLetGo)
+        {
+            crosshairImage.enabled = false;
             CmdDetach();
+        }
 
         // if successful pick up, activate teammate ragdoll every frame
         if (toActivateTeammateRagdoll)

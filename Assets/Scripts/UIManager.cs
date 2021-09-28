@@ -83,6 +83,7 @@ public class UIManager : NetworkBehaviour
     {
         if (gameManager.teamAWon)
             teamAWonText.enabled = true;
+
         else
             teamBWonText.enabled = true;
     }

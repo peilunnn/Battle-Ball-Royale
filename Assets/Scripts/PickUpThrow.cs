@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class PickUpThrow : NetworkBehaviour
 {
+    Rigidbody rb;
+
     [SyncVar] public bool isPicker = false;
     [SyncVar] public bool isPickedUp = false;
     [SyncVar] [SerializeField] bool toActivateTeammateRagdoll = false;
@@ -15,15 +17,12 @@ public class PickUpThrow : NetworkBehaviour
     PickUpThrow pickerScript;
 
     Transform destPos;
-    [SerializeField] RaycastHit[] hits = new RaycastHit[0];
     float throwForce = 1500;
     Vector3 throwDirection;
     int crosshairMaskIndex;
-    Rigidbody rb;
+    Image crosshairImage;
 
     MyGameManager gameManager;
-
-    Image crosshairImage;
 
 
     void Awake()

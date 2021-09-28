@@ -30,8 +30,8 @@ namespace DM
         GameObject obstruction;
         RaycastHit[] hits = new RaycastHit[0];
         float camToPlayerDistance;
-        float camToWallDistance;
-        float offset = 10f;
+        float camToObstructionDistance;
+        float distanceOffset = 10f;
 
         void Start()
         {
@@ -128,10 +128,10 @@ namespace DM
                 if ((hit.collider.tag != "Wall") && hit.collider.tag != "Ceiling")
                     return;
 
-                camToWallDistance = Vector3.Distance(mainCamera.position, hit.transform.position);
+                camToObstructionDistance = Vector3.Distance(mainCamera.position, hit.transform.position);
 
                 // keep shadows only to give the illusion that the object is still there 
-                if (camToWallDistance >= camToPlayerDistance - offset)
+                if (camToObstructionDistance >= camToPlayerDistance - distanceOffset)
                 {
                     obstruction = hit.transform.gameObject;
                     obstruction.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;

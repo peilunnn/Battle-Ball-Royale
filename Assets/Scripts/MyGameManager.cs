@@ -9,6 +9,7 @@ public class MyGameManager : NetworkBehaviour
     public List<GameObject> availablePlayers = new List<GameObject>();
 
     [SyncVar] public bool gameInProgress = false;
+
     [SyncVar] public bool teamAWon = false;
     [SyncVar] public bool teamBWon = false;
 
@@ -26,6 +27,7 @@ public class MyGameManager : NetworkBehaviour
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
+
     public GameObject GetRandomPlayer()
     {
         if (!isPlaytesting)
@@ -34,8 +36,10 @@ public class MyGameManager : NetworkBehaviour
         return availablePlayers[i++];
     }
 
+
     [ClientRpc]
     public void RpcRemoveFromAvailablePlayers(GameObject playerPrefab) => availablePlayers.Remove(playerPrefab);
+
 
     void Update()
     {
@@ -47,20 +51,12 @@ public class MyGameManager : NetworkBehaviour
             StartCoroutine(StartGame());
     }
 
+
     IEnumerator StartGame()
     {
         yield return new WaitForSeconds(1);
 
         UIManager.RpcSetStartGameUI();
         gameInProgress = true;
-    }
-
-    public void CheckIfTeamWon()
-    {
-        teamBWon = scoreManager.teams["TeamA"].Count == minPlayersPerTeam;
-        teamAWon = scoreManager.teams["TeamB"].Count == minPlayersPerTeam;
-
-        if (teamAWon || teamBWon)
-            UIManager.RpcSetWinningTeamText();
     }
 }

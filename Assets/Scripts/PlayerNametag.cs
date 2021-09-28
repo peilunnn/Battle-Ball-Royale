@@ -18,7 +18,7 @@ public class PlayerNametag : NetworkBehaviour
     }
 
 
-    void LateUpdate()
+    void Update()
     {
         if (!isLocalPlayer)
             return;
@@ -26,13 +26,13 @@ public class PlayerNametag : NetworkBehaviour
         if (!gameManager.gameInProgress)
         {
             localName = GameObject.Find("NetworkManager").GetComponent<MyNetworkManager>().playerName;
-            CmdSendNameToServer(localName);
+            CmdSetPlayerName(localName);
         }
     }
 
 
     [Command]
-    void CmdSendNameToServer(string localName) => RpcSetPlayerName(localName);
+    void CmdSetPlayerName(string localName) => RpcSetPlayerName(localName);
 
 
     [ClientRpc]

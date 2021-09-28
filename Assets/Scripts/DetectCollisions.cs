@@ -115,13 +115,11 @@ public class DetectCollisions : NetworkBehaviour
         opponent.GetComponent<Animator>().enabled = false;
         opponent.GetComponent<SphereCollider>().center = enlargedCenter;
 
-        // add opponent to his teams list
-        scoreManager.UpdateDict(opponent);
-
         if (!isServer)
             return;
 
-        UIManager.RpcUpdatePlayerCountTexts();
-        gameManager.CheckIfTeamWon();
+        // add opponent to his teams list
+        scoreManager.RpcUpdateDict(opponent);
+        scoreManager.RpcCheckIfTeamWon();
     }
 }

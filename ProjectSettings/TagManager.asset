@@ -6,11 +6,11 @@ TagManager:
   tags:
   - Ground
   - Ragdoll
-  - TeamA
-  - TeamB
   - Fire
   - Wall
   - Ceiling
+  - RedTeam
+  - BlueTeam
   layers:
   - Default
   - TransparentFX

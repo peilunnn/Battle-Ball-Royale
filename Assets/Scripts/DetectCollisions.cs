@@ -50,7 +50,7 @@ public class DetectCollisions : NetworkBehaviour
             sphereCollider.center = enlargedCenter;
 
             // managed to hit opponent
-            if ((gameObject.tag == "TeamA" && other.gameObject.tag == "TeamB") || (gameObject.tag == "TeamB" && other.gameObject.tag == "TeamA"))
+            if ((gameObject.tag == "RedTeam" && other.gameObject.tag == "BlueTeam") || (gameObject.tag == "BlueTeam" && other.gameObject.tag == "RedTeam"))
             {
                 GameObject opponent = other.gameObject;
                 CmdOnCollisionWithOpponent(opponent);
@@ -120,6 +120,7 @@ public class DetectCollisions : NetworkBehaviour
 
         // add opponent to his teams list
         scoreManager.RpcUpdateDict(opponent);
-        scoreManager.RpcCheckIfTeamWon();
+        UIManager.RpcUpdatePlayerCountTexts();
+        UIManager.RpcSetWinningTeamText();
     }
 }

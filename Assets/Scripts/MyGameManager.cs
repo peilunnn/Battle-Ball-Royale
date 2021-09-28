@@ -10,8 +10,8 @@ public class MyGameManager : NetworkBehaviour
 
     [SyncVar] public bool gameInProgress = false;
 
-    [SyncVar] public bool teamAWon = false;
-    [SyncVar] public bool teamBWon = false;
+    [SyncVar] public bool redTeamWon = false;
+    [SyncVar] public bool blueTeamWon = false;
 
     public int minPlayersPerTeam;
     public bool isPlaytesting;

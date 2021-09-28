@@ -8,15 +8,15 @@ public class ScoreManager : NetworkBehaviour
 
     MyGameManager gameManager;
 
-    UIManager UIManager; 
+    UIManager UIManager;
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
         UIManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
-        teams.Add("TeamA", new List<GameObject>());
-        teams.Add("TeamB", new List<GameObject>());
+        teams.Add("RedTeam", new List<GameObject>());
+        teams.Add("BlueTeam", new List<GameObject>());
     }
 
     [ClientRpc]
@@ -24,15 +24,5 @@ public class ScoreManager : NetworkBehaviour
     {
         if (!(teams[$"{player.tag}"].Contains(player)))
             teams[$"{player.tag}"].Add(player);
-    }
-
-    [ClientRpc]
-    public void RpcCheckIfTeamWon()
-    {
-        gameManager.teamBWon = teams["TeamA"].Count == gameManager.minPlayersPerTeam;
-        gameManager.teamAWon = teams["TeamB"].Count == gameManager.minPlayersPerTeam;
-
-        if (gameManager.teamAWon || gameManager.teamBWon)
-            UIManager.RpcSetWinningTeamText();
     }
 }

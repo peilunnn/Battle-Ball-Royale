@@ -9,10 +9,10 @@ public class UIManager : NetworkBehaviour
     Text countdownText3;
     Text countdownText2;
     Text countdownText1;
-    Text teamAPlayerCountText;
-    Text teamBPlayerCountText;
-    Text teamAWonText;
-    Text teamBWonText;
+    Text redTeamPlayerCountText;
+    Text blueTeamPlayerCountText;
+    Text redTeamWonText;
+    Text blueTeamWonText;
 
     AudioManager audioManager;
     MyGameManager gameManager;
@@ -27,11 +27,11 @@ public class UIManager : NetworkBehaviour
         countdownText2 = GameObject.Find("CountdownText2").GetComponent<Text>();
         countdownText1 = GameObject.Find("CountdownText1").GetComponent<Text>();
 
-        teamAPlayerCountText = GameObject.Find("TeamAPlayerCountText").GetComponent<Text>();
-        teamBPlayerCountText = GameObject.Find("TeamBPlayerCountText").GetComponent<Text>();
+        redTeamPlayerCountText = GameObject.Find("RedTeamPlayerCountText").GetComponent<Text>();
+        blueTeamPlayerCountText = GameObject.Find("BlueTeamPlayerCountText").GetComponent<Text>();
 
-        teamAWonText = GameObject.Find("TeamAWonText").GetComponent<Text>();
-        teamBWonText = GameObject.Find("TeamBWonText").GetComponent<Text>();
+        redTeamWonText = GameObject.Find("RedTeamWonText").GetComponent<Text>();
+        blueTeamWonText = GameObject.Find("BlueTeamWonText").GetComponent<Text>();
 
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         gameManager = GameObject.Find("MyGameManager").GetComponent<MyGameManager>();
@@ -65,26 +65,29 @@ public class UIManager : NetworkBehaviour
         countdownText1.enabled = false;
         audioManager.startGameSound.Play();
 
-        teamAPlayerCountText.text = $"Team A Players : {gameManager.minPlayersPerTeam}";
-        teamBPlayerCountText.text = $"Team B Players : {gameManager.minPlayersPerTeam}";
+        redTeamPlayerCountText.text = $"Red Team Players : {gameManager.minPlayersPerTeam}";
+        blueTeamPlayerCountText.text = $"Blue Team Players : {gameManager.minPlayersPerTeam}";
     }
 
 
     [ClientRpc]
     public void RpcUpdatePlayerCountTexts()
     {
-        teamAPlayerCountText.text = $"Team A Players : {gameManager.minPlayersPerTeam - scoreManager.teams["TeamA"].Count}";
-        teamBPlayerCountText.text = $"Team B Players : {gameManager.minPlayersPerTeam - scoreManager.teams["TeamB"].Count}";
+        redTeamPlayerCountText.text = $"Red Team Players : {gameManager.minPlayersPerTeam - scoreManager.teams["RedTeam"].Count}";
+        blueTeamPlayerCountText.text = $"Blue Team Players : {gameManager.minPlayersPerTeam - scoreManager.teams["BlueTeam"].Count}";
     }
 
 
     [ClientRpc]
     public void RpcSetWinningTeamText()
     {
-        if (gameManager.teamAWon)
-            teamAWonText.enabled = true;
+        gameManager.blueTeamWon = scoreManager.teams["RedTeam"].Count == gameManager.minPlayersPerTeam;
+        gameManager.redTeamWon = scoreManager.teams["BlueTeam"].Count == gameManager.minPlayersPerTeam;
 
-        else
-            teamBWonText.enabled = true;
+        if (gameManager.redTeamWon)
+            redTeamWonText.enabled = true;
+
+        else if (gameManager.blueTeamWon)
+            blueTeamWonText.enabled = true;
     }
 }

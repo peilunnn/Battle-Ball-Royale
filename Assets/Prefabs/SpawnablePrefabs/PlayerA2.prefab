@@ -1032,7 +1032,7 @@ GameObject:
   - component: {fileID: 8042676119396367908}
   m_Layer: 8
   m_Name: PlayerA2
-  m_TagString: TeamA
+  m_TagString: RedTeam
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

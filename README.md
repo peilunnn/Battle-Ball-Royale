@@ -31,13 +31,13 @@
 * WASD to move
 * Space to jump
 * Shift to sprint
-* Alt to roll
+* Ctrl to roll
 
 <br />
 
 **Picking Up and Throwing**
-* When a teammate is in range, press E to pick him up
-* Left click to throw him or right click to put him down
+* You can go up to a teammate and press E to pick him up
+* If you are being picked up, use your mouse to aim, and left click to launch yourself or right click to put yourself down
 
 <br /><br /><br />
 
